@@ -23,7 +23,10 @@ public class Zombie implements Person {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		ZombieChaseThread = new Thread(new zombieMoveRunnable());
+		ZombieChaseThread.start();
 	}
+	Thread ZombieChaseThread;
 	private Dimension ScreenSize;
 	private int positionX;
 	private int positionY;
@@ -111,6 +114,12 @@ public class Zombie implements Person {
 		// TODO Auto-generated method stub
 		//-2:left 2:right -1:down 1:up
 	}
+	public void setPositionY(int increment){
+		positionY += increment; 
+	}
+	public void setPositionX(int increment){
+		positionX += increment; 
+	}
 
 	@Override
 	public BufferedImage getSprite() {
@@ -122,6 +131,64 @@ public class Zombie implements Person {
 	public int[] getAffineSprite() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private void chase(){
+		if(getPositionY()>Player.getPositionYStat()){
+			if(maxSpeed<(getPositionY()-Player.getPositionYStat())){
+				setPositionY(-(getPositionY()-Player.getPositionYStat()));
+			}
+			else{
+				setPositionY(-maxSpeed);
+			}
+		}
+		else{
+			if(maxSpeed>(getPositionY()-Player.getPositionYStat())){
+				setPositionY((getPositionY()-Player.getPositionYStat()));
+			}
+			else{
+				setPositionY(maxSpeed);
+			}
+		}
+		if(getPositionX()>Player.getPositionXStat()){
+			if(maxSpeed<(getPositionX()-Player.getPositionXStat())){
+				setPositionX(-(getPositionX()-Player.getPositionXStat()));
+			}
+			else{
+				setPositionX(-maxSpeed);
+			}
+		}
+		else{
+			if(maxSpeed>(getPositionX()-Player.getPositionXStat())){
+				setPositionX((getPositionX()-Player.getPositionXStat()));
+			}
+			else{
+				setPositionX(maxSpeed);
+			}
+		}
+	}
+	public class zombieMoveRunnable implements Runnable{
+		zombieMoveRunnable(){
+			
+		}
+		public void run(){
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for(;;){
+				chase();
+				try {
+					Thread.sleep((int)(30/maxSpeed));
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
+			}
+		}
 	}
 
 }

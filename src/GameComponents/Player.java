@@ -33,15 +33,15 @@ public class Player implements Person {
 	private static int positionY;
 	private int maxSpeed;
 	private static int health;
+	private int[] spriteClipCoordinates = new int[4];
+	private int damageMultiplier;
+	public static boolean pauseGame = false;
+	private static int zombiesKilled = 0;
 	/*
 	 * 36x28
 	 * x166 y230
 	 */
 	private BufferedImage playerSprite;
-	private int[] spriteClipCoordinates = new int[4];
-	private int damageMultiplier;
-	public static boolean pauseGame = false;
-	
 	// Person Interface Methods
 	@Override
 	public void move() {
@@ -105,9 +105,9 @@ public class Player implements Person {
 		switch(direction){
 		case -2: positionX -= maxSpeed;
 			break;
-		case -1: positionY -= maxSpeed;
+		case -1: positionY += maxSpeed;
 				break;
-		case 1: positionY += maxSpeed;
+		case 1: positionY -= maxSpeed;
 				break;
 		case 2: positionX += maxSpeed;
 				break;

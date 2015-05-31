@@ -22,13 +22,12 @@ public class GameFrame extends JFrame {
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setBounds(0,0, ScreenSize.width, ScreenSize.height);
 		player = new Player();
-		zombie = new Zombie();
 		Thread visListen = new Thread(new ShowGameFrame());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		visListen.start();
 		gamePanel = new GamePanel();
 		gameCanvas = new GameCanvas();
-		Thread moveListner = new Thread(new personMoveListener());
+		moveThread = new Thread(new personMoveListener());
 		add(gamePanel);
 		add(gameCanvas);
 		gameCanvas.setFocusable(false);
@@ -38,6 +37,7 @@ public class GameFrame extends JFrame {
 		playerLastY = 0;
 			
 	}
+	Thread moveThread;
 	GamePanel gamePanel;
 	GameCanvas gameCanvas;
 	private int playerLastX;// = player.getPositionX();
@@ -45,11 +45,13 @@ public class GameFrame extends JFrame {
 	Dimension ScreenSize;
 	private static boolean isVis = false;
 	private Player player;
-	private Zombie zombie;
+	private ZombiePopulation zombies;
+	
+	
 	private static boolean runCanvasThread = false;
 	public static void setVis(boolean vis){
 		isVis = vis;
-		runCanvasThread = !runCanvasThread;
+		runCanvasThread = vis;
 	}
 	public class ShowGameFrame implements Runnable{
 
@@ -65,6 +67,9 @@ public class GameFrame extends JFrame {
 				}
 			}
 			setVisible(true);
+			setVis(true);
+			moveThread.start();
+			zombies = new ZombiePopulation();
 		}
 		
 	}
@@ -75,9 +80,9 @@ public class GameFrame extends JFrame {
 			// TODO Auto-generated method stub
 			while(runCanvasThread){
 				try {
-					Thread.sleep(30);
+					Thread.sleep(33);
 					if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
-						repaint();
+						gameCanvas.repaint();
 						playerLastX = player.getPositionX();
 						playerLastY = player.getPositionY();
 						System.out.println("Repainted");
@@ -88,8 +93,9 @@ public class GameFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println("Exited");
+				
 			}
+			System.out.println("Exited");
 		}
 		
 	}
@@ -129,7 +135,7 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.pauseGame = !player.pauseGame;
-					zombie.pauseGame = player.pauseGame;
+					Zombie.pauseGame = player.pauseGame;
 					System.out.println(player.pauseGame);
 				}
 			};
@@ -177,10 +183,11 @@ public class GameFrame extends JFrame {
 		}
 		public void paint(Graphics g){
 			Graphics2D g2 = (Graphics2D) g;
-			// Draw Player Sprite TODO get sprite coordinates, import as png for transparency
-			g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 266, null);
-			g2.drawImage(zombie.getSprite(), 200, 200, 328, 328, 0, 0, 128, 128, null);
-			validate();
+			// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
+			
+			g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
+			for(int i=0; i< zombies.getZombiePopulation();i++)
+			g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, 0, 0, 128, 128, null);
 		}
 			Thread moveListener;
 		
