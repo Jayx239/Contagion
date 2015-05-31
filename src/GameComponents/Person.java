@@ -1,5 +1,6 @@
 package GameComponents;
 
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public interface Person {
@@ -10,6 +11,7 @@ public interface Person {
 	int getHealth();
 	int getPositionX();
 	int getPositionY();
-	void setPosition();
+	void setPosition(int direction); // -2:left 2:right -1:down 1:up
 	BufferedImage getSprite();
+	int[] getAffineSprite();
 }

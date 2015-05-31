@@ -2,6 +2,7 @@ package GameComponents;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class Zombie implements Person {
 	private int maxSpeed;
 	private int health;
 	private int healthDepletionRate;
+	public static boolean pauseGame;
 	/*
 	 * Zombie Sprite dimensions http://opengameart.org/content/zombie-sprites
 	 *128x128 tiles.  8 direction, 36 frames per direction.
@@ -105,15 +107,21 @@ public class Zombie implements Person {
 	}
 
 	@Override
-	public void setPosition() {
+	public void setPosition(int direction) {
 		// TODO Auto-generated method stub
-		
+		//-2:left 2:right -1:down 1:up
 	}
 
 	@Override
 	public BufferedImage getSprite() {
 		// TODO Auto-generated method stub
 		return zombieSprite;
+	}
+
+	@Override
+	public int[] getAffineSprite() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

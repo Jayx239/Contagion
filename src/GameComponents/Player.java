@@ -3,6 +3,7 @@ package GameComponents;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +38,9 @@ public class Player implements Person {
 	 * x166 y230
 	 */
 	private BufferedImage playerSprite;
+	private int[] spriteClipCoordinates = new int[4];
 	private int damageMultiplier;
+	public static boolean pauseGame = false;
 	
 	// Person Interface Methods
 	@Override
@@ -81,10 +84,10 @@ public class Player implements Person {
 	@Override
 	public int getPositionX() {
 		// TODO Auto-generated method stub
-		return positionY;
+		return positionX;
 	}
 	public static int getPositionXStat(){
-		return positionY;
+		return positionX;
 	}
 	@Override
 	public int getPositionY() {
@@ -96,9 +99,19 @@ public class Player implements Person {
 	}
 
 	@Override
-	public void setPosition() {
+	public void setPosition(int direction) {
 		// TODO Auto-generated method stub
-		
+		//-2:left 2:right -1:down 1:up
+		switch(direction){
+		case -2: positionX -= maxSpeed;
+			break;
+		case -1: positionY -= maxSpeed;
+				break;
+		case 1: positionY += maxSpeed;
+				break;
+		case 2: positionX += maxSpeed;
+				break;
+		};
 	}
 
 	@Override
@@ -106,4 +119,11 @@ public class Player implements Person {
 		// TODO Auto-generated method stub
 		return playerSprite;
 	}
+
+	@Override
+	public int[] getAffineSprite() {
+		// TODO Auto-generated method stub
+		return spriteClipCoordinates;
+	}
+	
 }
