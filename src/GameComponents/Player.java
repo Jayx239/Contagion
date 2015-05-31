@@ -3,7 +3,11 @@ package GameComponents;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 
@@ -15,14 +19,25 @@ public class Player implements Person {
 		positionY = (int) (ScreenSize.getHeight()/2);	// Character at center of screen Y
 		maxSpeed = 5;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
-		healthDepletionRate = 5; // Rate at which players health depletes TODO make selectable for difficulty
+		damageMultiplier = 5; // Rate at which players damages enemys TODO make selectable for difficulty
+		try {
+			playerSprite = ImageIO.read(new File("assets/SoldierSprite.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	// Instance variables
-	private int positionX;
-	private int positionY;
+	private static int positionX;
+	private static int positionY;
 	private int maxSpeed;
-	private int health;
-	private int healthDepletionRate;
+	private static int health;
+	/*
+	 * 36x28
+	 * x166 y230
+	 */
+	private BufferedImage playerSprite;
+	private int damageMultiplier;
 	
 	// Person Interface Methods
 	@Override
@@ -48,28 +63,47 @@ public class Player implements Person {
 		// TODO Auto-generated method stub
 		
 	}
+	public void setHealthStat(int increment) {
+		// TODO Auto-generated method stub
+		setHealth(increment);
+	}
 
 	@Override
 	public int getHealth() {
 		// TODO Auto-generated method stub
-		return 0;
+		return health;
+	}
+	public static int getHealthStat() {
+		// TODO Auto-generated method stub
+		return health;
 	}
 
 	@Override
 	public int getPositionX() {
 		// TODO Auto-generated method stub
-		return 0;
+		return positionY;
 	}
-
+	public static int getPositionXStat(){
+		return positionY;
+	}
 	@Override
 	public int getPositionY() {
 		// TODO Auto-generated method stub
-		return 0;
+		return positionY;
+	}
+	public static int getPositionYStat(){
+		return positionY;
 	}
 
 	@Override
 	public void setPosition() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public BufferedImage getSprite() {
+		// TODO Auto-generated method stub
+		return playerSprite;
 	}
 }

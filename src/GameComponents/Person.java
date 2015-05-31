@@ -1,5 +1,7 @@
 package GameComponents;
 
+import java.awt.image.BufferedImage;
+
 public interface Person {
 	void move();
 	void attack();
@@ -9,4 +11,5 @@ public interface Person {
 	int getPositionX();
 	int getPositionY();
 	void setPosition();
+	BufferedImage getSprite();
 }

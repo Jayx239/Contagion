@@ -2,6 +2,11 @@ package GameComponents;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Zombie implements Person {
 	public Zombie(){
@@ -11,6 +16,12 @@ public class Zombie implements Person {
 		maxSpeed = 5;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		healthDepletionRate = 5; // Rate at which players health depletes TODO make selectable for difficulty
+		try {
+			zombieSprite = ImageIO.read(new File("assets/ZombieSprites.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	private Dimension ScreenSize;
 	private int positionX;
@@ -18,6 +29,18 @@ public class Zombie implements Person {
 	private int maxSpeed;
 	private int health;
 	private int healthDepletionRate;
+	/*
+	 * Zombie Sprite dimensions http://opengameart.org/content/zombie-sprites
+	 *128x128 tiles.  8 direction, 36 frames per direction.
+	 *Stance (4 frames)
+	 *Lurch (8 frames)
+	 *Slam (4 frames)
+	 *Bite (4 frames)
+	 *Block (2 frames)
+	 *Hit and Die (6 frames)
+	 *Critical Death (8 frames) 
+	 */
+	private BufferedImage zombieSprite;
 	
 	// Method to randomly select which position zombies spawn at
 	private void setEntryPosition(){
@@ -85,6 +108,12 @@ public class Zombie implements Person {
 	public void setPosition() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public BufferedImage getSprite() {
+		// TODO Auto-generated method stub
+		return zombieSprite;
 	}
 
 }
