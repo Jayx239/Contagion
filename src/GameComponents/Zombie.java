@@ -14,7 +14,7 @@ public class Zombie implements Person {
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// Instantiate instance variables
 		setEntryPosition();	// Set position of screen that zombies start at 
-		maxSpeed = 5;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
+		maxSpeed = 1;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		healthDepletionRate = 5; // Rate at which players health depletes TODO make selectable for difficulty
 		try {
@@ -24,9 +24,9 @@ public class Zombie implements Person {
 			e.printStackTrace();
 		}
 		ZombieChaseThread = new Thread(new zombieMoveRunnable());
-		ZombieChaseThread.start();
+		//ZombieChaseThread.start();
 	}
-	Thread ZombieChaseThread;
+	public Thread ZombieChaseThread;
 	private Dimension ScreenSize;
 	private int positionX;
 	private int positionY;
@@ -82,7 +82,7 @@ public class Zombie implements Person {
 	@Override
 	public void die() {
 		// TODO Auto-generated method stub
-		
+		ZombieChaseThread.interrupt();
 	}
 
 	@Override
@@ -100,16 +100,16 @@ public class Zombie implements Person {
 	@Override
 	public int getPositionX() {
 		// TODO Auto-generated method stub
-		return 0;
+		return positionX;
 	}
 
 	@Override
 	public int getPositionY() {
 		// TODO Auto-generated method stub
-		return 0;
+		return positionY;
 	}
 
-	@Override
+	@Override // unused
 	public void setPosition(int direction) {
 		// TODO Auto-generated method stub
 		//-2:left 2:right -1:down 1:up
@@ -134,38 +134,23 @@ public class Zombie implements Person {
 	}
 	
 	private void chase(){
-		if(getPositionY()>Player.getPositionYStat()){
-			if(maxSpeed<(getPositionY()-Player.getPositionYStat())){
-				setPositionY(-(getPositionY()-Player.getPositionYStat()));
-			}
-			else{
+		// Zombie above player
+		if(getPositionY()+(maxSpeed*4)>Player.getPositionYStat()){
 				setPositionY(-maxSpeed);
-			}
 		}
-		else{
-			if(maxSpeed>(getPositionY()-Player.getPositionYStat())){
-				setPositionY((getPositionY()-Player.getPositionYStat()));
-			}
-			else{
+		//Zombie below player
+		else if(getPositionY()-(maxSpeed*4)<(getPositionY()-Player.getPositionYStat())){
 				setPositionY(maxSpeed);
 			}
-		}
-		if(getPositionX()>Player.getPositionXStat()){
-			if(maxSpeed<(getPositionX()-Player.getPositionXStat())){
-				setPositionX(-(getPositionX()-Player.getPositionXStat()));
-			}
-			else{
+		
+		// Zombie to right of player
+		if((getPositionX()-maxSpeed*4)>Player.getPositionXStat()){
 				setPositionX(-maxSpeed);
-			}
 		}
-		else{
-			if(maxSpeed>(getPositionX()-Player.getPositionXStat())){
-				setPositionX((getPositionX()-Player.getPositionXStat()));
-			}
-			else{
+		else if ((getPositionX()+maxSpeed*4)>Player.getPositionXStat()){
 				setPositionX(maxSpeed);
-			}
 		}
+		
 	}
 	public class zombieMoveRunnable implements Runnable{
 		zombieMoveRunnable(){
@@ -173,7 +158,7 @@ public class Zombie implements Person {
 		}
 		public void run(){
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -181,7 +166,7 @@ public class Zombie implements Person {
 			for(;;){
 				chase();
 				try {
-					Thread.sleep((int)(30/maxSpeed));
+					Thread.sleep((int)(100/maxSpeed));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -189,6 +174,9 @@ public class Zombie implements Person {
 				}
 			}
 		}
+	}
+	public Thread getThread(){
+		return ZombieChaseThread;
 	}
 
 }

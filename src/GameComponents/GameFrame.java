@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import Menus.*;
 
@@ -37,6 +40,7 @@ public class GameFrame extends JFrame {
 		playerLastY = 0;
 			
 	}
+	Lock moveLock = new ReentrantLock();
 	Thread moveThread;
 	GamePanel gamePanel;
 	GameCanvas gameCanvas;
@@ -46,7 +50,6 @@ public class GameFrame extends JFrame {
 	private static boolean isVis = false;
 	private Player player;
 	private ZombiePopulation zombies;
-	
 	
 	private static boolean runCanvasThread = false;
 	public static void setVis(boolean vis){
@@ -79,19 +82,27 @@ public class GameFrame extends JFrame {
 		public void run() {
 			// TODO Auto-generated method stub
 			while(runCanvasThread){
+				
 				try {
-					Thread.sleep(33);
-					if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
-						gameCanvas.repaint();
-						playerLastX = player.getPositionX();
-						playerLastY = player.getPositionY();
-						System.out.println("Repainted");
+					Thread.sleep(30);
+					while(!moveLock.tryLock()){
+						Thread.sleep(10);
 					}
-						System.out.println("Running");
+					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
+					moveLock.unlock();
+						gameCanvas.repaint();
+						
+						//playerLastX = player.getPositionX();
+						//playerLastY = player.getPositionY();
+						//System.out.println("Repainted");
+					//}
+						//System.out.println("Running");
 						
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				finally{
 				}
 				
 			}
@@ -128,7 +139,7 @@ public class GameFrame extends JFrame {
 					moveDown
 			);		
 		}
-		
+			LinkedList<Integer> keysDown = new LinkedList<Integer>();
 			// Mapped Actions
 			// Pause game
 			Action pauseGame = new AbstractAction(){
@@ -136,7 +147,7 @@ public class GameFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					player.pauseGame = !player.pauseGame;
 					Zombie.pauseGame = player.pauseGame;
-					System.out.println(player.pauseGame);
+					//System.out.println(player.pauseGame);
 				}
 			};
 
@@ -144,7 +155,7 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setPosition(-2);
-					System.out.println(player.getPositionX()+ " " + player.getPositionY());
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
 			};
@@ -152,7 +163,7 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setPosition(2);
-					System.out.println(player.getPositionX()+ " " + player.getPositionY());
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
 			};
@@ -160,34 +171,41 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setPosition(1);
-					System.out.println(player.getPositionX()+ " " + player.getPositionY());
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
 			Action moveDown = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setPosition(-1);
-					System.out.println(player.getPositionX()+ " " + player.getPositionY());
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
+			
 			
 	}
 	public class GameCanvas extends Canvas{
 		public GameCanvas(){
-			this.setBounds(0, 0,(int)ScreenSize.getWidth(),(int)ScreenSize.getHeight());
+			
+			this.setBounds(0, 0,100,100);
 			repaint();
 			setVisible(true);
 			//moveListener = new Thread(new personMoveListener());
 			//moveListener.start();
-			validate();
+
 		}
 		public void paint(Graphics g){
+while(!moveLock.tryLock()){
+				
+			}
 			Graphics2D g2 = (Graphics2D) g;
 			// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
 			
 			g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
-			for(int i=0; i< zombies.getZombiePopulation();i++)
+			for(int i=0; i< zombies.getZombiePopulation();i++){
 			g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, 0, 0, 128, 128, null);
+			}
+			moveLock.unlock();
 		}
 			Thread moveListener;
 		

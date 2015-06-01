@@ -1,10 +1,12 @@
 package GameComponents;
 
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ZombiePopulation {
-	public void ZombiePopulation(){
-		ZombieLimit = 500;
+	public ZombiePopulation(){
+		ZombieLimit = 2;
 		ZombieSpawnRate = 1000;
 		genZombieThread = new Thread(new generateZombie());
 		genZombieThread.start();
@@ -14,12 +16,16 @@ public class ZombiePopulation {
 	private Vector<Zombie> Zombies = new Vector<Zombie>();
 	public Thread genZombieThread;
 	private void addZombie(){
-		Zombies.addElement(new Zombie());
+		Zombie zombie = new Zombie();
+		Zombies.addElement(zombie);
+		zombieThreadPool.execute(zombie.getThread());
 	}
 	
 	public void removeZombie(int zombieIndex){
 		Zombies.get(zombieIndex).die();
+		
 		Zombies.remove(zombieIndex);
+		
 	}
 	public Zombie getZombie(int zombieIndex){
 		return Zombies.get(zombieIndex);
@@ -39,11 +45,11 @@ public class ZombiePopulation {
 				e.printStackTrace();
 			}
 			for(;;){
-				System.out.println("Generating Zombies");
+				//System.out.println("Generating Zombies");
 				while(Zombies.size() < ZombieLimit){
 					addZombie();
 					try {
-						Thread.sleep((int)(10*ZombieSpawnRate/getZombiePopulation()));
+						Thread.sleep((5000));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -53,4 +59,7 @@ public class ZombiePopulation {
 			
 		}
 	}
+	
+	ExecutorService zombieThreadPool = Executors.newFixedThreadPool(4);
+	
 }
