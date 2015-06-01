@@ -29,12 +29,8 @@ public class GameFrame extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		visListen.start();
 		gamePanel = new GamePanel();
-		gameCanvas = new GameCanvas();
 		moveThread = new Thread(new personMoveListener());
 		add(gamePanel);
-		add(gameCanvas);
-		gameCanvas.setFocusable(false);
-		//gamePanel.requestFocus();
 		validate();
 		playerLastX = 0;
 		playerLastY = 0;
@@ -43,7 +39,6 @@ public class GameFrame extends JFrame {
 	Lock moveLock = new ReentrantLock();
 	Thread moveThread;
 	GamePanel gamePanel;
-	GameCanvas gameCanvas;
 	private int playerLastX;// = player.getPositionX();
 	private int playerLastY;// = player.getPositionY();
 	Dimension ScreenSize;
@@ -90,8 +85,8 @@ public class GameFrame extends JFrame {
 					}
 					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
 					moveLock.unlock();
-						gameCanvas.repaint();
-						
+						//gameCanvas.repaint();
+						gamePanel.repaint();
 						//playerLastX = player.getPositionX();
 						//playerLastY = player.getPositionY();
 						//System.out.println("Repainted");
@@ -181,47 +176,21 @@ public class GameFrame extends JFrame {
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
-			
+			public void paintComponent(Graphics g){
+				while(!moveLock.tryLock()){
+					
+				}
+				Graphics2D g2 = (Graphics2D) g;
+				// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
+				
+				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
+				for(int i=0; i< zombies.getZombiePopulation();i++){
+				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, 0, 0, 128, 128, null);
+				}
+				moveLock.unlock();
+			}
 			
 	}
-	public class GameCanvas extends Canvas{
-		public GameCanvas(){
-			
-			this.setBounds(0, 0,100,100);
-			repaint();
-			setVisible(true);
-			//moveListener = new Thread(new personMoveListener());
-			//moveListener.start();
-
-		}
-		public void paint(Graphics g){
-while(!moveLock.tryLock()){
-				
-			}
-			Graphics2D g2 = (Graphics2D) g;
-			// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
-			
-			g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
-			for(int i=0; i< zombies.getZombiePopulation();i++){
-			g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, 0, 0, 128, 128, null);
-			}
-			moveLock.unlock();
-		}
-			Thread moveListener;
-		
-		
-		
-	}
-		/*
-		public class redrawCanvasRunnable implements Runnable{
-			public redrawCanvasRunnable(){
-				
-			}
-			public void run(){
-				
-			}
-		}
-		*/
 	
 
 	

@@ -16,7 +16,7 @@ public class Zombie implements Person {
 		setEntryPosition();	// Set position of screen that zombies start at 
 		maxSpeed = 1;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
-		healthDepletionRate = 5; // Rate at which players health depletes TODO make selectable for difficulty
+		healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
 		try {
 			zombieSprite = ImageIO.read(new File("assets/ZombieSprites.png"));
 		} catch (IOException e) {
@@ -24,7 +24,7 @@ public class Zombie implements Person {
 			e.printStackTrace();
 		}
 		ZombieChaseThread = new Thread(new zombieMoveRunnable());
-		//ZombieChaseThread.start();
+		ZombieChaseThread.start();
 	}
 	public Thread ZombieChaseThread;
 	private Dimension ScreenSize;
@@ -51,17 +51,17 @@ public class Zombie implements Person {
 	private void setEntryPosition(){
 		int entrySide = (int) (4*Math.random());
 		switch(entrySide){
-		case 1: positionX = 0;
-				positionY = (int)(Math.random()*ScreenSize.getHeight());
+		case 1: this.positionX = 0;
+				this.positionY = (int)(Math.random()*ScreenSize.getHeight());
 				break;
-		case 2: positionY = 0;
-				positionX = (int)(Math.random()*ScreenSize.getWidth());
+		case 2: this.positionY = 0;
+				this.positionX = (int)(Math.random()*ScreenSize.getWidth());
 				break;
-		case 3: positionX = (int)(ScreenSize.getWidth());
-				positionY = (int)(Math.random()*ScreenSize.getHeight());
+		case 3: this.positionX = (int)(ScreenSize.getWidth());
+				this.positionY = (int)(Math.random()*ScreenSize.getHeight());
 				break;
-		case 4: positionY = (int)(ScreenSize.getHeight());
-				positionX = (int)(Math.random()*ScreenSize.getWidth());
+		case 4: this.positionY = (int)(ScreenSize.getHeight());
+				this.positionX = (int)(Math.random()*ScreenSize.getWidth());
 				break;
 		}
 	}
@@ -134,25 +134,28 @@ public class Zombie implements Person {
 	}
 	
 	private void chase(){
-		// Zombie above player
-		if(getPositionY()+(maxSpeed*4)>Player.getPositionYStat()){
+		//TODO make 128/2 variable for scaling(image size/2)
+		// Zombie below player
+		if(this.getPositionY()>Player.getPositionYStat()-((128/2))){
 				setPositionY(-maxSpeed);
 		}
-		//Zombie below player
-		else if(getPositionY()-(maxSpeed*4)<(getPositionY()-Player.getPositionYStat())){
-				setPositionY(maxSpeed);
+		//Zombie above player
+		if(this.getPositionY()<Player.getPositionYStat()-(128/2)){
+				setPositionY(+maxSpeed);
 			}
 		
 		// Zombie to right of player
-		if((getPositionX()-maxSpeed*4)>Player.getPositionXStat()){
+		if((this.getPositionX())>Player.getPositionXStat()-(128/2)){
 				setPositionX(-maxSpeed);
 		}
-		else if ((getPositionX()+maxSpeed*4)>Player.getPositionXStat()){
-				setPositionX(maxSpeed);
+		// Zombie to left of player
+		if ((this.getPositionX())<Player.getPositionXStat()-(128/2)){
+				setPositionX(+maxSpeed);
 		}
 		
 	}
-	public class zombieMoveRunnable implements Runnable{
+	// Zombie Chase runnable for chasing player thread
+	private class zombieMoveRunnable implements Runnable{
 		zombieMoveRunnable(){
 			
 		}

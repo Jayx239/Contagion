@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 
 public class ZombiePopulation {
 	public ZombiePopulation(){
-		ZombieLimit = 2;
+		ZombieLimit = 500;
 		ZombieSpawnRate = 1000;
 		genZombieThread = new Thread(new generateZombie());
 		genZombieThread.start();
@@ -18,7 +18,6 @@ public class ZombiePopulation {
 	private void addZombie(){
 		Zombie zombie = new Zombie();
 		Zombies.addElement(zombie);
-		zombieThreadPool.execute(zombie.getThread());
 	}
 	
 	public void removeZombie(int zombieIndex){
@@ -60,6 +59,5 @@ public class ZombiePopulation {
 		}
 	}
 	
-	ExecutorService zombieThreadPool = Executors.newFixedThreadPool(4);
 	
 }
