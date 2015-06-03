@@ -77,9 +77,11 @@ public class GameFrame extends JFrame {
 			}
 			setVisible(true);
 			setVis(true);
-			moveThread.start();
-			zombies = new ZombiePopulation();
 			bullets = new BulletTracking();
+
+			zombies = new ZombiePopulation();
+
+			moveThread.start();
 		}
 		
 	}

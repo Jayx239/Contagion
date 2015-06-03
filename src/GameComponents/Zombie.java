@@ -10,20 +10,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Zombie implements Person {
-	public Zombie(){
+	public Zombie(BufferedImage Sprite){
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// Instantiate instance variables
 		setEntryPosition();	// Set position of screen that zombies start at 
-		maxSpeed = (int)Math.ceil((Math.random()*4));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
+		maxSpeed = (int)Math.ceil((Math.random()*2));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
 		damageMultiplier = -5;
-		try {
-			zombieSprite = ImageIO.read(new File("assets/ZombieSprites.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		zombieSprite = Sprite;
 		ZombieChaseThread = new Thread(new zombieMoveRunnable());
 		ZombieChaseThread.start();
 	}

@@ -1,8 +1,13 @@
 package GameComponents;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.imageio.ImageIO;
 
 public class ZombiePopulation {
 	public ZombiePopulation(){
@@ -10,13 +15,20 @@ public class ZombiePopulation {
 		ZombieSpawnRate = 1000;
 		genZombieThread = new Thread(new generateZombie());
 		genZombieThread.start();
+		try {
+			setZombieSprite = ImageIO.read(new File("assets/ZombieSprites.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	private BufferedImage setZombieSprite;
 	private int ZombieLimit;
 	private int ZombieSpawnRate;
 	private static Vector<Zombie> Zombies = new Vector<Zombie>();
 	public Thread genZombieThread;
 	private void addZombie(){
-		Zombie zombie = new Zombie();
+		Zombie zombie = new Zombie(setZombieSprite);
 		Zombies.addElement(zombie);
 	}
 	
