@@ -2,9 +2,13 @@ package Menus;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -14,7 +18,7 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 	
 	public SplashScreenPanel(){
 		Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setBounds(ScreenSize.width/2-ScreenSize.width/8,ScreenSize.height/2-ScreenSize.height/8 , ScreenSize.width/4, ScreenSize.height/4);
+		this.setBounds(ScreenSize.width/2-ScreenSize.width/8,ScreenSize.height/2-ScreenSize.height/8 , 480, 270);
 		//this.addKeyListener(this);
 		this.setVisible(true);
 		stringRun = new showStringThread();
@@ -26,7 +30,7 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 				interruptT
 		);
 	}
-	
+	boolean showString = false;
 	showStringThread stringRun;
 	static Thread stringThread;
 	Action interruptT = new AbstractAction(){
@@ -41,39 +45,43 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 	public class showStringThread implements Runnable{
 
 		public void run(){
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			while(!Thread.interrupted()){
 
-				showString = true;
 				repaint();
 			System.out.println(" aa");
 			
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				SplashScreen.setShow();
 				return;
 				
 			}
+			showString = true;
 			}
 			
 			
 		}
 	}
-	boolean showString = false;
 
 	public void paint(Graphics g){
+		Graphics2D g2 = (Graphics2D) g;
 		String continueS;
+		g2.setFont(new Font("Impact",Font.ITALIC,30));
+		g2.setColor(Color.RED);
+		g2.drawString("CONTAGION", 165, 30);
+		g2.setColor(Color.BLACK);
+		g2.setFont(new Font("Algerean",Font.PLAIN,20));
+		g2.drawString("Created by Jason Gallagher",110,75);
+		g2.setFont(new Font("Algerean",Font.PLAIN,10));
+		g2.drawString("Zombie Sprites by Clint Bellanger",280,220);
+		validate();
 		if(showString){
 			continueS = "Press Enter to Continue";
-			g.setColor(Color.BLACK);
-			g.drawString(continueS,this.getWidth()/2 -this.getWidth()/8 , this.getHeight()-this.getHeight()/4);
+			g2.setColor(Color.BLACK);
+			g2.setFont(new Font("Algerean",Font.PLAIN,20));
+			g2.drawString(continueS,135,175);
 			showString = false;
 			validate();
 		}

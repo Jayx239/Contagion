@@ -16,8 +16,8 @@ public class Zombie implements Person {
 		setEntryPosition();	// Set position of screen that zombies start at 
 		maxSpeed = (int)Math.ceil((Math.random()*2));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
-		healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
-		damageMultiplier = -5;
+		//healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
+		damageMultiplier = -2;
 		zombieSprite = Sprite;
 		ZombieChaseThread = new Thread(new zombieMoveRunnable());
 		ZombieChaseThread.start();
@@ -29,10 +29,12 @@ public class Zombie implements Person {
 	private int[] spriteCoord = new int[2];
 	private int[] spriteWalkX = {128*5,128*6,128*7,128*8,128*9,128*10,128*11};
 	private int[] spriteWalkY = {0,128*1,128*2,128*3,128*4,128*5,128*6,128*7};
+	private int[] zombieDieX = {128*28,128*29,128*30,128*31,128*32,128*33,128*34,128*35,128*36};
 	private int[] faceDirectionXY ={0,0};
 	
 	private int walkCount = 0;
 	public Thread ZombieChaseThread;
+	private Thread ZombieDieThread = new Thread(new DieRunnable());
 	private Dimension ScreenSize;
 	// Position = top left
 	private int positionX;
@@ -42,7 +44,7 @@ public class Zombie implements Person {
 	private static int zombieSpriteHeight = 64;
 	private int maxSpeed;
 	private int health;
-	private int healthDepletionRate;
+	//private int healthDepletionRate; // not used player sets damage using player multiplier
 	public static boolean pauseGame;
 	private int damageMultiplier;
 	/*
@@ -100,6 +102,8 @@ public class Zombie implements Person {
 	public void die() {
 		// TODO Auto-generated method stub
 		ZombieChaseThread.interrupt();
+		ZombieDieThread.start();
+		
 	}
 
 	@Override
@@ -109,12 +113,13 @@ public class Zombie implements Person {
 		if(health <= 0){
 			die();
 		}
+		System.out.println(getHealth());
 	}
 
 	@Override
 	public int getHealth() {
 		// TODO Auto-generated method stub
-		return 0;
+		return health;
 	}
 
 	@Override
@@ -247,19 +252,40 @@ public class Zombie implements Person {
 			}
 			for(;;){
 				chase();
-				if(Math.abs(positionX-Player.getPositionXStat()) <= (Player.getPlayerWidth()+zombieSpriteHeight)  && Math.abs(positionY-Player.getPositionYStat()) <= (Player.getPlayerWidth()+zombieSpriteWidth)){
+				if((Math.abs(positionX-Player.getPositionXStat()) <= ((Player.getPlayerWidth()+zombieSpriteHeight)/2) || Math.abs(positionX+Player.getPositionXStat()) <= ((Player.getPlayerWidth()+zombieSpriteHeight)/2))  && (Math.abs(positionY-Player.getPositionYStat()) <= ((Player.getPlayerWidth()+zombieSpriteWidth)/2) || Math.abs(positionY+Player.getPositionYStat()) <= ((Player.getPlayerWidth()+zombieSpriteWidth)/2))){
 					attack();
 				}
 				try {
 					Thread.sleep((int)(100/maxSpeed));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 					return;
 				}
 			}
 		}
 	}
+	
+	public class DieRunnable implements Runnable{
+		DieRunnable(){
+			
+		}
+		public void run(){
+			for(int i = 0; i<zombieDieX.length;i++){
+				spriteCoord[0] = zombieDieX[i]; 
+			try {
+				Thread.sleep((int)(100/maxSpeed));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				return;
+			}
+			}
+			setPositionY(-100);
+			setPositionX(-100);
+		}
+	}
+	
 	public Thread getThread(){
 		return ZombieChaseThread;
 	}

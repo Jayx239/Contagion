@@ -99,6 +99,8 @@ public class GameFrame extends JFrame {
 					}
 					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
 					moveLock.unlock();
+
+					player.setPosition();
 						//gameCanvas.repaint();
 						gamePanel.repaint();
 						//playerLastX = player.getPositionX();
@@ -238,7 +240,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(2,1);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -248,7 +249,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(2,0);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -258,7 +258,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(0,1);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -268,7 +267,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(0,0);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -278,7 +276,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(1,1);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -287,7 +284,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(1,0);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -295,7 +291,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(3,1);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -304,7 +299,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setMoveCoordinate(3,0);
-					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
