@@ -13,7 +13,7 @@ public class ZombiePopulation {
 	}
 	private int ZombieLimit;
 	private int ZombieSpawnRate;
-	private Vector<Zombie> Zombies = new Vector<Zombie>();
+	private static Vector<Zombie> Zombies = new Vector<Zombie>();
 	public Thread genZombieThread;
 	private void addZombie(){
 		Zombie zombie = new Zombie();
@@ -26,10 +26,10 @@ public class ZombiePopulation {
 		Zombies.remove(zombieIndex);
 		
 	}
-	public Zombie getZombie(int zombieIndex){
+	public static Zombie getZombie(int zombieIndex){
 		return Zombies.get(zombieIndex);
 	}
-	public int getZombiePopulation(){
+	public static int getZombiePopulation(){
 		return Zombies.size();
 	}
 	public class generateZombie implements Runnable{

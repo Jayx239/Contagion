@@ -14,7 +14,7 @@ public class Zombie implements Person {
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// Instantiate instance variables
 		setEntryPosition();	// Set position of screen that zombies start at 
-		maxSpeed = (int)Math.ceil((Math.random()*6));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
+		maxSpeed = (int)Math.ceil((Math.random()*4));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
 		damageMultiplier = -5;
@@ -33,8 +33,8 @@ public class Zombie implements Person {
 	private int positionX;
 	private int positionY;
 	// Zombie cent coordinates x+64xy+64
-	private int zombieSpriteWidth = 64;
-	private int zombieSpriteHeight = 64;
+	private static int zombieSpriteWidth = 64;
+	private static int zombieSpriteHeight = 64;
 	private int maxSpeed;
 	private int health;
 	private int healthDepletionRate;
@@ -100,7 +100,10 @@ public class Zombie implements Person {
 	@Override
 	public void setHealth(int increment) {
 		// TODO Auto-generated method stub
-		
+		health+= increment;
+		if(health <= 0){
+			die();
+		}
 	}
 
 	@Override
@@ -121,11 +124,6 @@ public class Zombie implements Person {
 		return positionY;
 	}
 
-	@Override // unused
-	public void setPosition(int direction) {
-		// TODO Auto-generated method stub
-		//-2:left 2:right -1:down 1:up
-	}
 	public void setPositionY(int increment){
 		positionY += increment; 
 	}
@@ -195,6 +193,15 @@ public class Zombie implements Person {
 	}
 	public Thread getThread(){
 		return ZombieChaseThread;
+	}
+
+	@Override
+	public void setPosition() {
+		// TODO Auto-generated method stub
+		
+	}
+	public static int getSpriteDim(){
+		return zombieSpriteWidth;
 	}
 
 }

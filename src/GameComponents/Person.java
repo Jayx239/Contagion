@@ -11,7 +11,7 @@ public interface Person {
 	int getHealth();
 	int getPositionX();
 	int getPositionY();
-	void setPosition(int direction); // -2:left 2:right -1:down 1:up
+	public void setPosition(); // -2:left 2:right -1:down 1:up
 	BufferedImage getSprite();
 	int[] getAffineSprite();
 }

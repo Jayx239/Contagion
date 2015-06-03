@@ -1,6 +1,7 @@
 package GameComponents;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -42,16 +43,25 @@ public class GameFrame extends JFrame {
 	GamePanel gamePanel;
 	private int playerLastX;// = player.getPositionX();
 	private int playerLastY;// = player.getPositionY();
-	Dimension ScreenSize;
+	public static Dimension ScreenSize;
 	private static boolean isVis = false;
 	private Player player;
 	private ZombiePopulation zombies;
+	private BulletTracking bullets;
 	
 	private static boolean runCanvasThread = false;
 	public static void setVis(boolean vis){
 		isVis = vis;
 		runCanvasThread = vis;
 	}
+	
+	public static int getWindowWidth(){
+		return (int) ScreenSize.width;
+	}
+	public static int getWindowHeight(){
+		return (int) ScreenSize.height;
+	}
+	
 	public class ShowGameFrame implements Runnable{
 
 		@Override
@@ -69,6 +79,7 @@ public class GameFrame extends JFrame {
 			setVis(true);
 			moveThread.start();
 			zombies = new ZombiePopulation();
+			bullets = new BulletTracking();
 		}
 		
 	}
@@ -82,7 +93,7 @@ public class GameFrame extends JFrame {
 				try {
 					Thread.sleep(30);
 					while(!moveLock.tryLock()){
-						Thread.sleep(30);
+						Thread.sleep(1000);
 					}
 					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
 					moveLock.unlock();
@@ -159,7 +170,6 @@ public class GameFrame extends JFrame {
 					releaseDown
 			);
 			
-			
 			// Shoot functionallity
 						// shoot left mapped to left arrow key
 						// key pressed (start)
@@ -206,7 +216,7 @@ public class GameFrame extends JFrame {
 								releaseShootDown
 						);
 		}
-			LinkedList<Integer> keysDown = new LinkedList<Integer>();
+			private int[] bulletDirection = {0,0,0,0};
 			// Mapped Actions
 			// Pause game
 			Action pauseGame = new AbstractAction(){
@@ -221,7 +231,8 @@ public class GameFrame extends JFrame {
 			Action moveLeft = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-2);
+					player.setMoveCoordinate(2,1);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -230,7 +241,8 @@ public class GameFrame extends JFrame {
 			Action releaseLeft = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-2);
+					player.setMoveCoordinate(2,0);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -239,7 +251,8 @@ public class GameFrame extends JFrame {
 			Action moveRight = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(2);
+					player.setMoveCoordinate(0,1);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -248,7 +261,8 @@ public class GameFrame extends JFrame {
 			Action releaseRight = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(2);
+					player.setMoveCoordinate(0,0);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -257,7 +271,8 @@ public class GameFrame extends JFrame {
 			Action moveUp = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(1);
+					player.setMoveCoordinate(1,1);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -265,14 +280,16 @@ public class GameFrame extends JFrame {
 			Action releaseUp = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(1);
+					player.setMoveCoordinate(1,0);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
 			Action moveDown = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-1);
+					player.setMoveCoordinate(3,1);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -280,7 +297,8 @@ public class GameFrame extends JFrame {
 			Action releaseDown = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-1);
+					player.setMoveCoordinate(3,0);
+					player.setPosition();
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -289,7 +307,8 @@ public class GameFrame extends JFrame {
 			Action shootLeft = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-2);
+					bulletDirection[0] = 1;
+					bullets.addBullet(new Bullet(bulletDirection));
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -298,7 +317,7 @@ public class GameFrame extends JFrame {
 			Action releaseShootLeft = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-2);
+					bulletDirection[0] = 0;
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -307,7 +326,8 @@ public class GameFrame extends JFrame {
 			Action shootRight = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(2);
+					bulletDirection[2] = 1;
+					bullets.addBullet(new Bullet(bulletDirection));
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -316,7 +336,7 @@ public class GameFrame extends JFrame {
 			Action releaseShootRight = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(2);
+					bulletDirection[2] = 0;
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -325,7 +345,8 @@ public class GameFrame extends JFrame {
 			Action shootUp = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(1);
+					bulletDirection[1] = 1;
+					bullets.addBullet(new Bullet(bulletDirection));
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -333,14 +354,15 @@ public class GameFrame extends JFrame {
 			Action releaseShootUp = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(1);
+					bulletDirection[1] = 0;
+					
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
 			Action shootDown = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-1);
+					bulletDirection[3] = 1;
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -348,7 +370,7 @@ public class GameFrame extends JFrame {
 			Action releaseShootDown = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					player.setPosition(-1);
+					bulletDirection[3] = 0;
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -359,10 +381,13 @@ public class GameFrame extends JFrame {
 				}
 				Graphics2D g2 = (Graphics2D) g;
 				// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
-				
+				g2.setColor(Color.YELLOW);
 				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
 				for(int i=0; i< zombies.getZombiePopulation();i++){
 				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, 0, 0, 128, 128, null);
+				}
+				for(int i=0; i< bullets.getNumBullets(); i++ ){
+					g2.fillOval(bullets.getBullet(i).getBulletX(), bullets.getBullet(i).getBulletY(), 10, 10);
 				}
 				moveLock.unlock();
 			}

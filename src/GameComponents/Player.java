@@ -36,9 +36,10 @@ public class Player implements Person {
 	private int maxSpeed;
 	private static int health;
 	private int[] spriteClipCoordinates = new int[4];
-	private int damageMultiplier;
+	private static int damageMultiplier;
 	public static boolean pauseGame = false;
 	private static int zombiesKilled = 0;
+	private static int[] moveCoordinates= new int[4];	// [xup,yup,xdown,ydown]
 	/*
 	 * 36x28
 	 * x166 y230
@@ -104,7 +105,14 @@ public class Player implements Person {
 	}
 
 	@Override
-	public void setPosition(int direction) {
+	public void setPosition(){
+		int dx = (moveCoordinates[0] - moveCoordinates[2]) * maxSpeed;
+		int dy = (moveCoordinates[3] - moveCoordinates[1]) * maxSpeed;
+		positionX += dx;
+		positionY += dy;
+		
+	}
+	/*public void setPosition(int direction) {
 		// TODO Auto-generated method stub
 		//-2:left 2:right -1:down 1:up
 		switch(direction){
@@ -117,7 +125,8 @@ public class Player implements Person {
 		case 2: positionX += maxSpeed;
 				break;
 		};
-	}
+	}*/
+	
 
 	@Override
 	public BufferedImage getSprite() {
@@ -135,6 +144,12 @@ public class Player implements Person {
 	}
 	public static int getPlayerHeight(){
 		return spriteHeight;
+	}
+	public void setMoveCoordinate(int index,int val){
+		moveCoordinates[index] = val;
+	}
+	public static int getDamage(){
+		return damageMultiplier;
 	}
 	
 }
