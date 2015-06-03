@@ -47,10 +47,14 @@ public class SplashScreen extends JFrame{
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					setVisible(false);
+					GameFrame.setVis(true);
+					return;
 				}
 			}
 			setVisible(false);
 			GameFrame.setVis(true);
+			
 		}
 		
 	}

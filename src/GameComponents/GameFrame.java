@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -81,7 +82,7 @@ public class GameFrame extends JFrame {
 				try {
 					Thread.sleep(30);
 					while(!moveLock.tryLock()){
-						Thread.sleep(10);
+						Thread.sleep(30);
 					}
 					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
 					moveLock.unlock();
@@ -114,25 +115,96 @@ public class GameFrame extends JFrame {
 					pauseGame
 			);
 			// move left mapped to A key
-			this.getInputMap().put(KeyStroke.getKeyStroke("A"),"moveleft");
+			// key pressed (start)
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A,0,false),"moveleft");
 			this.getActionMap().put("moveleft",
 					moveLeft
 			);
+			// key released (stop)
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A,0,true),"releaseleft");
+			this.getActionMap().put("releaseleft",
+					releaseLeft
+			);
+			
 			// Move right mapped to D key
-			this.getInputMap().put(KeyStroke.getKeyStroke("D"),"moveright");
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D,0,false),"moveright");
 			this.getActionMap().put("moveright",
 					moveRight
 			);
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D,0,true),"releaseright");
+			this.getActionMap().put("releaseright",
+					releaseRight
+			);
+			
 			// Move up mapped to W key
-			this.getInputMap().put(KeyStroke.getKeyStroke("W"),"moveUp");
+			// key pressed (start)
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W,0,false),"moveUp");
 			this.getActionMap().put("moveUp",
 					moveUp
 			);
+			// key released (stop)
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W,0,true),"releaseUp");
+			this.getActionMap().put("releaseUp",
+					releaseUp
+			);
 			// Move down mapped to S key
-			this.getInputMap().put(KeyStroke.getKeyStroke("S"),"movedown");
+			// key pressed (start)
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_S,0,false),"movedown");
 			this.getActionMap().put("movedown",
 					moveDown
 			);		
+			// key released (stop)
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_S,0,true),"releasedown");
+			this.getActionMap().put("releasedown",
+					releaseDown
+			);
+			
+			
+			// Shoot functionallity
+						// shoot left mapped to left arrow key
+						// key pressed (start)
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,false),"shootleft");
+						this.getActionMap().put("shootleft",
+								shootLeft
+						);
+						// key released (stop)
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,0,true),"releaseShootleft");
+						this.getActionMap().put("releaseShootleft",
+								releaseShootLeft
+						);
+						
+						// Move right mapped to right arrow key
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,false),"shootright");
+						this.getActionMap().put("shootright",
+								shootRight
+						);
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,0,true),"releaseShootright");
+						this.getActionMap().put("releaseShootright",
+								releaseShootRight
+						);
+						
+						// Move up mapped to up arrow key
+						// key pressed (start)
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,false),"shootup");
+						this.getActionMap().put("shootup",
+								shootUp
+						);
+						// key released (stop)
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0,true),"releaseShootup");
+						this.getActionMap().put("releaseShootup",
+								releaseShootUp
+						);
+						// Move down mapped to down arrow key
+						// key pressed (start)
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,false),"shootdown");
+						this.getActionMap().put("shootdown",
+								shootDown
+						);		
+						// key released (stop)
+						this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0,true),"releaseShootdown");
+						this.getActionMap().put("releaseShootdown",
+								releaseShootDown
+						);
 		}
 			LinkedList<Integer> keysDown = new LinkedList<Integer>();
 			// Mapped Actions
@@ -154,6 +226,16 @@ public class GameFrame extends JFrame {
 
 				}
 			};
+			
+			Action releaseLeft = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(-2);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};
+			
 			Action moveRight = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -162,7 +244,25 @@ public class GameFrame extends JFrame {
 
 				}
 			};
+			
+			Action releaseRight = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(2);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};
+			
 			Action moveUp = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(1);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+				}
+			};
+			
+			Action releaseUp = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					player.setPosition(1);
@@ -176,6 +276,83 @@ public class GameFrame extends JFrame {
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
+			
+			Action releaseDown = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(-1);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+				}
+			};
+			
+			// Shoot actions -----------------------------------------------
+			Action shootLeft = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(-2);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};
+			
+			Action releaseShootLeft = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(-2);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};
+			
+			Action shootRight = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(2);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};
+			
+			Action releaseShootRight = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(2);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};
+			
+			Action shootUp = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(1);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+				}
+			};
+			
+			Action releaseShootUp = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(1);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+				}
+			};
+			Action shootDown = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(-1);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+				}
+			};
+			
+			Action releaseShootDown = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					player.setPosition(-1);
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+				}
+			};
+			
 			public void paintComponent(Graphics g){
 				while(!moveLock.tryLock()){
 					

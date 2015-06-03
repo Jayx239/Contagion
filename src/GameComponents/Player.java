@@ -18,9 +18,9 @@ public class Player implements Person {
 		// Instantiate instance variables
 		positionX = (int) (ScreenSize.getWidth()/2);	// Character at center of screen X
 		positionY = (int) (ScreenSize.getHeight()/2);	// Character at center of screen Y
-		maxSpeed = 5;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
+		maxSpeed = 6;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
-		damageMultiplier = 5; // Rate at which players damages enemys TODO make selectable for difficulty
+		damageMultiplier = -25; // Rate at which players damages enemys TODO make selectable for difficulty
 		try {
 			playerSprite = ImageIO.read(new File("assets/SoldierSprite.png"));
 		} catch (IOException e) {
@@ -31,6 +31,8 @@ public class Player implements Person {
 	// Instance variables
 	private static int positionX;
 	private static int positionY;
+	private static int spriteWidth = 36;
+	private static int spriteHeight = 28;
 	private int maxSpeed;
 	private static int health;
 	private int[] spriteClipCoordinates = new int[4];
@@ -60,15 +62,18 @@ public class Player implements Person {
 		// TODO Auto-generated method stub
 		
 	}
+	public static void dieStat(){
+		System.out.println("Dead");
+	}
 
 	@Override
 	public void setHealth(int increment) {
 		// TODO Auto-generated method stub
-		
+		health+= increment;
 	}
-	public void setHealthStat(int increment) {
+	public static void setHealthStat(int increment) {
 		// TODO Auto-generated method stub
-		setHealth(increment);
+		health += increment;
 	}
 
 	@Override
@@ -124,6 +129,12 @@ public class Player implements Person {
 	public int[] getAffineSprite() {
 		// TODO Auto-generated method stub
 		return spriteClipCoordinates;
+	}
+	public static int getPlayerWidth(){
+		return spriteWidth;
+	}
+	public static int getPlayerHeight(){
+		return spriteHeight;
 	}
 	
 }

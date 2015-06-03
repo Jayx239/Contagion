@@ -14,9 +14,10 @@ public class Zombie implements Person {
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// Instantiate instance variables
 		setEntryPosition();	// Set position of screen that zombies start at 
-		maxSpeed = 1;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
+		maxSpeed = (int)Math.ceil((Math.random()*6));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
+		damageMultiplier = -5;
 		try {
 			zombieSprite = ImageIO.read(new File("assets/ZombieSprites.png"));
 		} catch (IOException e) {
@@ -28,12 +29,17 @@ public class Zombie implements Person {
 	}
 	public Thread ZombieChaseThread;
 	private Dimension ScreenSize;
+	// Position = top left
 	private int positionX;
 	private int positionY;
+	// Zombie cent coordinates x+64xy+64
+	private int zombieSpriteWidth = 64;
+	private int zombieSpriteHeight = 64;
 	private int maxSpeed;
 	private int health;
 	private int healthDepletionRate;
 	public static boolean pauseGame;
+	private int damageMultiplier;
 	/*
 	 * Zombie Sprite dimensions http://opengameart.org/content/zombie-sprites
 	 *128x128 tiles.  8 direction, 36 frames per direction.
@@ -76,7 +82,13 @@ public class Zombie implements Person {
 	@Override
 	public void attack() {
 		// TODO Auto-generated method stub
-		
+		Player.setHealthStat(damageMultiplier);
+		if(Player.getHealthStat() <= 0){
+			Player.dieStat();
+		}
+		else{
+			System.out.println(Player.getHealthStat());
+		}
 	}
 
 	@Override
@@ -118,7 +130,7 @@ public class Zombie implements Person {
 		positionY += increment; 
 	}
 	public void setPositionX(int increment){
-		positionX += increment; 
+		positionX += increment;
 	}
 
 	@Override
@@ -136,20 +148,20 @@ public class Zombie implements Person {
 	private void chase(){
 		//TODO make 128/2 variable for scaling(image size/2)
 		// Zombie below player
-		if(this.getPositionY()>Player.getPositionYStat()-((128/2))){
+		if(this.getPositionY()>Player.getPositionYStat()-((zombieSpriteHeight))){
 				setPositionY(-maxSpeed);
 		}
 		//Zombie above player
-		if(this.getPositionY()<Player.getPositionYStat()-(128/2)){
+		if(this.getPositionY()<Player.getPositionYStat()-(zombieSpriteHeight)){
 				setPositionY(+maxSpeed);
 			}
 		
 		// Zombie to right of player
-		if((this.getPositionX())>Player.getPositionXStat()-(128/2)){
+		if((this.getPositionX())>Player.getPositionXStat()-(zombieSpriteWidth)){
 				setPositionX(-maxSpeed);
 		}
 		// Zombie to left of player
-		if ((this.getPositionX())<Player.getPositionXStat()-(128/2)){
+		if ((this.getPositionX())<Player.getPositionXStat()-(zombieSpriteWidth)){
 				setPositionX(+maxSpeed);
 		}
 		
@@ -168,6 +180,9 @@ public class Zombie implements Person {
 			}
 			for(;;){
 				chase();
+				if(Math.abs(positionX-Player.getPositionXStat()) <= (Player.getPlayerWidth()+zombieSpriteHeight)  && Math.abs(positionY-Player.getPositionYStat()) <= (Player.getPlayerWidth()+zombieSpriteWidth)){
+					attack();
+				}
 				try {
 					Thread.sleep((int)(100/maxSpeed));
 				} catch (InterruptedException e) {
