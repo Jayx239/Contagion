@@ -402,7 +402,7 @@ public class GameFrame extends JFrame {
 				g2.setColor(Color.YELLOW);
 				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
 				for(int i=0; i< zombies.getZombiePopulation();i++){
-				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, 0, 0, 128, 128, null);
+				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, zombies.getZombie(i).getSpriteCoord()[0], zombies.getZombie(i).getSpriteCoord()[1], zombies.getZombie(i).getSpriteCoord()[0]+128, zombies.getZombie(i).getSpriteCoord()[1]+128, null);
 				}
 				for(int i=0; i< bullets.getNumBullets(); i++ ){
 					g2.fillOval(bullets.getBullet(i).getBulletX(), bullets.getBullet(i).getBulletY(), 10, 10);

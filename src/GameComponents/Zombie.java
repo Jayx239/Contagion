@@ -21,7 +21,17 @@ public class Zombie implements Person {
 		zombieSprite = Sprite;
 		ZombieChaseThread = new Thread(new zombieMoveRunnable());
 		ZombieChaseThread.start();
+		spriteCoord[0] = 0;
+		spriteCoord[1] = 0;
 	}
+	// Instance variables
+	// Sprite handling
+	private int[] spriteCoord = new int[2];
+	private int[] spriteWalkX = {128*5,128*6,128*7,128*8,128*9,128*10,128*11};
+	private int[] spriteWalkY = {0,128*1,128*2,128*3,128*4,128*5,128*6,128*7};
+	private int[] faceDirectionXY ={0,0};
+	
+	private int walkCount = 0;
 	public Thread ZombieChaseThread;
 	private Dimension ScreenSize;
 	// Position = top left
@@ -143,21 +153,85 @@ public class Zombie implements Person {
 		// Zombie below player
 		if(this.getPositionY()>Player.getPositionYStat()-((zombieSpriteHeight))){
 				setPositionY(-maxSpeed);
+				faceDirectionXY[1] = 1;
 		}
 		//Zombie above player
-		if(this.getPositionY()<Player.getPositionYStat()-(zombieSpriteHeight)){
+		else if(this.getPositionY()<Player.getPositionYStat()-(zombieSpriteHeight)){
 				setPositionY(+maxSpeed);
+				faceDirectionXY[1] = -1;
 			}
+		else{
+			faceDirectionXY[1] = 0;
+		}
 		
 		// Zombie to right of player
 		if((this.getPositionX())>Player.getPositionXStat()-(zombieSpriteWidth)){
 				setPositionX(-maxSpeed);
+				faceDirectionXY[0] = -1;
 		}
 		// Zombie to left of player
-		if ((this.getPositionX())<Player.getPositionXStat()-(zombieSpriteWidth)){
+		else if ((this.getPositionX())<Player.getPositionXStat()-(zombieSpriteWidth)){
 				setPositionX(+maxSpeed);
+				faceDirectionXY[0] = 1;
+		}
+		else{
+			faceDirectionXY[0] = 0;
+		}
+		// determine direction zombie is facing
+		switch(faceDirectionXY[0]){
+		case 0:
+				switch(faceDirectionXY[1]){
+				case 0:
+					break;
+					
+				case 1:
+					spriteCoord[1] = spriteWalkY[2];
+				break;
+				
+				case -1:
+						spriteCoord[1] = spriteWalkY[6];
+					break;
+				}
+			break;
+		case 1:
+			switch(faceDirectionXY[1]){
+			case 0:
+				spriteCoord[1] = spriteWalkY[4];
+				break;
+				
+			case 1:
+				spriteCoord[1] = spriteWalkY[3];
+			break;
+			
+			case -1:
+					spriteCoord[1] = spriteWalkY[5];
+				break;
+			}
+			break;
+		case -1:
+			switch(faceDirectionXY[1]){
+			case 0:
+				spriteCoord[1] = spriteWalkY[1];
+				break;
+				
+			case 1:
+				spriteCoord[1] = spriteWalkY[0];
+			break;
+			
+			case -1:
+					spriteCoord[1] = spriteWalkY[7];
+				break;
+			}
+			break;
 		}
 		
+		spriteCoord[0] = spriteWalkX[walkCount];
+		if(walkCount < 6){
+			walkCount++;
+		}
+		else{
+			walkCount = 0;
+		}
 	}
 	// Zombie Chase runnable for chasing player thread
 	private class zombieMoveRunnable implements Runnable{
@@ -197,6 +271,9 @@ public class Zombie implements Person {
 	}
 	public static int getSpriteDim(){
 		return zombieSpriteWidth;
+	}
+	public int[] getSpriteCoord(){
+		return spriteCoord;
 	}
 
 }
