@@ -104,14 +104,18 @@ public class GameFrame extends JFrame {
 						//System.out.println("Repainted");
 					//}
 						//System.out.println("Running");
-						
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				finally{
 				}
-				
+				try {
+					Thread.sleep(30);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			System.out.println("Exited");
 		}
@@ -308,7 +312,9 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[0] = 1;
+					if(bullets.getNumBullets() <= 10){
 					bullets.addBullet(new Bullet(bulletDirection));
+					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -327,7 +333,10 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[2] = 1;
-					bullets.addBullet(new Bullet(bulletDirection));
+
+					if(bullets.getNumBullets() <= 10){
+						bullets.addBullet(new Bullet(bulletDirection));
+					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -346,7 +355,10 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[1] = 1;
-					bullets.addBullet(new Bullet(bulletDirection));
+
+					if(bullets.getNumBullets() <= 10){
+						bullets.addBullet(new Bullet(bulletDirection));
+					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -363,6 +375,10 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[3] = 1;
+
+					if(bullets.getNumBullets() <= 10){
+						bullets.addBullet(new Bullet(bulletDirection));
+					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
