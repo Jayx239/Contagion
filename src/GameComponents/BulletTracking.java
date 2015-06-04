@@ -31,8 +31,13 @@ public class BulletTracking {
 			for(;;){
 				for(int i=0; i< getNumBullets();i++){
 					if(bullets.get(i).isDestroyed()){
+						try{
 						bullets.remove(i);
-					}
+						}
+						catch(ArrayIndexOutOfBoundsException e){
+							
+						}
+						}
 				}
 			}
 		}

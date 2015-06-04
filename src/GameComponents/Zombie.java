@@ -30,6 +30,7 @@ public class Zombie implements Person {
 	private int[] spriteWalkX = {128*5,128*6,128*7,128*8,128*9,128*10,128*11};
 	private int[] spriteWalkY = {0,128*1,128*2,128*3,128*4,128*5,128*6,128*7};
 	private int[] zombieDieX = {128*28,128*29,128*30,128*31,128*32,128*33,128*34,128*35,128*36};
+	private int[] zombieAttackX = {128*12,128*13,128*14,128*15,128*16,128*17,128*18,128*19,128*20};
 	private int[] faceDirectionXY ={0,0};
 	
 	private int walkCount = 0;
@@ -47,6 +48,7 @@ public class Zombie implements Person {
 	//private int healthDepletionRate; // not used player sets damage using player multiplier
 	public static boolean pauseGame;
 	private int damageMultiplier;
+	public boolean Dead = false;
 	/*
 	 * Zombie Sprite dimensions http://opengameart.org/content/zombie-sprites
 	 *128x128 tiles.  8 direction, 36 frames per direction.
@@ -90,6 +92,8 @@ public class Zombie implements Person {
 	public void attack() {
 		// TODO Auto-generated method stub
 		Player.setHealthStat(damageMultiplier);
+		Thread attack = new Thread(new attackRunnable());
+		attack.start();
 		if(Player.getHealthStat() <= 0){
 			Player.dieStat();
 		}
@@ -103,7 +107,6 @@ public class Zombie implements Person {
 		// TODO Auto-generated method stub
 		ZombieChaseThread.interrupt();
 		ZombieDieThread.start();
-		
 	}
 
 	@Override
@@ -137,8 +140,14 @@ public class Zombie implements Person {
 	public void setPositionY(int increment){
 		positionY += increment; 
 	}
+	public void setAbsolutePositionY(int position){
+		positionY = position;
+	}
 	public void setPositionX(int increment){
 		positionX += increment;
+	}
+	public void setAbsolutePositionX(int position){
+		positionY = position;
 	}
 
 	@Override
@@ -246,9 +255,86 @@ public class Zombie implements Person {
 		public void run(){
 			for(;;){
 				chase();
-				if((Math.abs(positionX-Player.getPositionXStat()) <= ((Player.getPlayerWidth()+zombieSpriteHeight)/2) || Math.abs(positionX+Player.getPositionXStat()) <= ((Player.getPlayerWidth()+zombieSpriteHeight)/2))  && (Math.abs(positionY-Player.getPositionYStat()) <= ((Player.getPlayerWidth()+zombieSpriteWidth)/2) || Math.abs(positionY+Player.getPositionYStat()) <= ((Player.getPlayerWidth()+zombieSpriteWidth)/2))){
-					attack();
+				int dirX;
+				int dirY;
+				try{
+					dirX=positionX-Player.getPositionXStat()/Math.abs(positionX-Player.getPositionXStat());
 				}
+				catch(ArithmeticException e){
+					dirX= 0;
+				}
+				
+				try{
+					dirY=positionX-Player.getPositionXStat()/Math.abs(positionX-Player.getPositionXStat());
+				}
+				catch(ArithmeticException e){
+					dirY= 0;
+				}
+				
+				switch(dirX){
+				case 0:
+						
+						switch(dirY){
+						case 0:
+							attack();
+							//break;
+						
+						case 1:
+								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+50){
+									attack();
+								}
+								//break;
+							case -1:
+								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+100){
+									attack();
+								}
+								//break;
+						}
+					
+				case 1:
+					if(positionX-Player.getPositionXStat()<= Player.getPlayerWidth()/2+50){
+						
+						switch(dirY){
+						case 0:
+							attack();
+							//break;
+						
+						case 1:
+								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+50){
+									attack();
+								}
+								//break;
+							case -1:
+								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+100){
+									attack();
+								}
+								//break;
+						}
+					}
+						//break;
+					case -1:
+						if(positionX-Player.getPositionXStat()>= Player.getPlayerWidth()/2+75){
+							
+							switch(dirY){
+							case 0:
+								attack();
+								//break;
+							
+							case 1:
+									if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+50){
+										attack();
+									}
+									//break;
+								case -1:
+									if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+100){
+										attack();
+									}
+									//break;
+							}
+							}
+					//break;
+				}
+				
 				try {
 					Thread.sleep((int)(100/maxSpeed));
 				} catch (InterruptedException e) {
@@ -274,13 +360,29 @@ public class Zombie implements Person {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
 
-				setPositionY(-100);
-				setPositionX(-100);
+				setAbsolutePositionY(-100);
+				setAbsolutePositionX(-100);
 				return;
 			}
 			}
-			setPositionY(-100);
-			setPositionX(-100);
+			setAbsolutePositionY(-100);
+			setAbsolutePositionX(-100);
+		}
+	}
+	
+	public class attackRunnable implements Runnable{
+		attackRunnable(){
+			
+		}
+		public void run(){
+			for(int i = 0; i<zombieAttackX.length;i++){
+				spriteCoord[0] = zombieAttackX[i]; 
+			try {
+				Thread.sleep((int)(300/maxSpeed));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			}
 		}
 	}
 	
@@ -299,5 +401,7 @@ public class Zombie implements Person {
 	public int[] getSpriteCoord(){
 		return spriteCoord;
 	}
-
+	public boolean isDead(){
+		return Dead;
+	}
 }

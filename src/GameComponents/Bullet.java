@@ -63,8 +63,12 @@ public class Bullet {
 					if(getBulletX()>=(ZombiePopulation.getZombie(i).getPositionX()+50-10) && getBulletX()<=(ZombiePopulation.getZombie(i).getPositionX()+75+10)){
 						if(getBulletY()>=(ZombiePopulation.getZombie(i).getPositionY()+45-10) && getBulletY()<=(ZombiePopulation.getZombie(i).getPositionY()+100+10)){
 							destroy();
+							try{
 						ZombiePopulation.getZombie(i).setHealth(Player.getDamage());
-						isAlive = false;
+							}
+							catch(IllegalThreadStateException e){
+								isAlive = false;
+							}
 						}
 					}
 				}

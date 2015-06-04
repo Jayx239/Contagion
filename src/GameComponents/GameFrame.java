@@ -87,6 +87,11 @@ public class GameFrame extends JFrame {
 	}
 	
 	public class personMoveListener implements Runnable{
+		private int bulletStepCount = 0;
+		private int bulletDelay = 4;
+		public void steBulletDelay(int delay){
+			bulletDelay = delay;
+		}
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -97,9 +102,18 @@ public class GameFrame extends JFrame {
 					while(!moveLock.tryLock()){
 						Thread.sleep(1000);
 					}
+					
 					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
 					moveLock.unlock();
-
+					if(bulletStepCount >= bulletDelay){
+					if(gamePanel.getBulletX() != 0 || gamePanel.getBulletY() != 0){
+						bullets.addBullet(new Bullet(gamePanel.getBulletDirection()));
+						bulletStepCount = 0;
+					}
+					}
+					else{
+						bulletStepCount++;
+					}
 					player.setPosition();
 						//gameCanvas.repaint();
 						gamePanel.repaint();
@@ -225,6 +239,15 @@ public class GameFrame extends JFrame {
 						);
 		}
 			private int[] bulletDirection = {0,0,0,0};
+			public int[] getBulletDirection(){
+				return bulletDirection;
+			}
+			public int getBulletX(){
+				return bulletDirection[0]+bulletDirection[2];
+			}
+			public int getBulletY(){
+				return bulletDirection[1]+bulletDirection[3];
+			}
 			// Mapped Actions
 			// Pause game
 			Action pauseGame = new AbstractAction(){
@@ -308,9 +331,7 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[0] = 1;
-					if(bullets.getNumBullets() <= 10){
-					bullets.addBullet(new Bullet(bulletDirection));
-					}
+					
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -329,10 +350,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[2] = 1;
-
-					if(bullets.getNumBullets() <= 10){
-						bullets.addBullet(new Bullet(bulletDirection));
-					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
@@ -351,10 +368,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[1] = 1;
-
-					if(bullets.getNumBullets() <= 10){
-						bullets.addBullet(new Bullet(bulletDirection));
-					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -371,10 +384,6 @@ public class GameFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					bulletDirection[3] = 1;
-
-					if(bullets.getNumBullets() <= 10){
-						bullets.addBullet(new Bullet(bulletDirection));
-					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 				}
 			};
@@ -404,7 +413,11 @@ public class GameFrame extends JFrame {
 				// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
 				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
 				for(int i=0; i< zombies.getZombiePopulation();i++){
+					
 				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, zombies.getZombie(i).getSpriteCoord()[0], zombies.getZombie(i).getSpriteCoord()[1], zombies.getZombie(i).getSpriteCoord()[0]+128, zombies.getZombie(i).getSpriteCoord()[1]+128, null);
+				if(zombies.getZombie(i).isDead()){
+						zombies.removeZombie(i);
+					}
 				}
 				g2.setColor(Color.YELLOW);
 				for(int i=0; i< bullets.getNumBullets(); i++ ){
