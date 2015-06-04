@@ -9,12 +9,16 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Menus.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -37,8 +41,14 @@ public class GameFrame extends JFrame {
 		validate();
 		playerLastX = 0;
 		playerLastY = 0;
-			
+			try {
+				Background = ImageIO.read(new File("assets/grass_18.png"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
+	BufferedImage Background;
 	public static Thread visListen;
 	Lock moveLock = new ReentrantLock();
 	Thread moveThread;
@@ -422,6 +432,9 @@ public class GameFrame extends JFrame {
 					
 				}
 				Graphics2D g2 = (Graphics2D) g;
+				g2.drawImage(Background, 0, 0, ScreenSize.width, ScreenSize.height, 0, 0, 429, 429, null);
+				g2.setColor(Color.WHITE);
+				g2.fillRect(5, 5, 250, 75);
 				g2.setColor(Color.BLACK);
 				g2.drawString("Health",50,30);
 				g2.drawString("Kills", 50, 60);
