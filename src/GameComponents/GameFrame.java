@@ -3,6 +3,7 @@ package GameComponents;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -27,7 +28,7 @@ public class GameFrame extends JFrame {
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setBounds(0,0, ScreenSize.width, ScreenSize.height);
 		player = new Player();
-		Thread visListen = new Thread(new ShowGameFrame());
+		visListen = new Thread(new ShowGameFrame());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		visListen.start();
 		gamePanel = new GamePanel();
@@ -38,6 +39,7 @@ public class GameFrame extends JFrame {
 		playerLastY = 0;
 			
 	}
+	public static Thread visListen;
 	Lock moveLock = new ReentrantLock();
 	Thread moveThread;
 	GamePanel gamePanel;
@@ -105,6 +107,7 @@ public class GameFrame extends JFrame {
 					
 					//if(player.getPositionX()!= playerLastX || player.getPositionY() != playerLastY){
 					moveLock.unlock();
+					if(player.getHealth() != 0){
 					if(bulletStepCount >= bulletDelay){
 					if(gamePanel.getBulletX() != 0 || gamePanel.getBulletY() != 0){
 						bullets.addBullet(new Bullet(gamePanel.getBulletDirection()));
@@ -115,6 +118,7 @@ public class GameFrame extends JFrame {
 						bulletStepCount++;
 					}
 					player.setPosition();
+					}
 						//gameCanvas.repaint();
 						gamePanel.repaint();
 						//playerLastX = player.getPositionX();
@@ -142,11 +146,16 @@ public class GameFrame extends JFrame {
 	
 	public class GamePanel extends JComponent{
 		GamePanel(){
-			// Enter key for pause
+			// Enter key for pause (not implemented)
 			this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"),"pause");
 			this.getActionMap().put("pause",
 					pauseGame
 			);
+			// R key for restart TODO: implement
+			/*this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_R,0,true),"restart");
+			this.getActionMap().put("restart",
+					Restart
+			);*/
 			// move left mapped to A key
 			// key pressed (start)
 			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A,0,false),"moveleft");
@@ -258,6 +267,18 @@ public class GameFrame extends JFrame {
 					//System.out.println(player.pauseGame);
 				}
 			};
+			
+			//Restart Game (R key)
+			/*Action Restart = new AbstractAction(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					visListen.interrupt();
+					visListen.start();
+					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
+
+				}
+			};*/
+
 
 			Action moveLeft = new AbstractAction(){
 				@Override
@@ -411,7 +432,9 @@ public class GameFrame extends JFrame {
 				g2.fillRect(100, 12, Player.getHealthStat(), 20);
 				
 				// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
+				if(player.getHealth() != 0){
 				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
+				}
 				for(int i=0; i< zombies.getZombiePopulation();i++){
 					
 				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, zombies.getZombie(i).getSpriteCoord()[0], zombies.getZombie(i).getSpriteCoord()[1], zombies.getZombie(i).getSpriteCoord()[0]+128, zombies.getZombie(i).getSpriteCoord()[1]+128, null);
@@ -422,6 +445,11 @@ public class GameFrame extends JFrame {
 				g2.setColor(Color.YELLOW);
 				for(int i=0; i< bullets.getNumBullets(); i++ ){
 					g2.fillOval(bullets.getBullet(i).getBulletX(), bullets.getBullet(i).getBulletY(), 10, 10);
+				}
+				if(player.getHealth() == 0){
+					g2.setColor(Color.RED);
+					g2.setFont(new Font("Impact",Font.ITALIC,30));
+					g2.drawString("GAME OVER", (int)(ScreenSize.getWidth()/2-50), (int)(ScreenSize.getHeight()/2-50));
 				}
 				moveLock.unlock();
 			}

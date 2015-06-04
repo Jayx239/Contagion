@@ -64,6 +64,7 @@ public class Player implements Person {
 		
 	}
 	public static void dieStat(){
+		
 		System.out.println("Dead");
 	}
 
