@@ -14,7 +14,7 @@ public class Zombie implements Person {
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// Instantiate instance variables
 		setEntryPosition();	// Set position of screen that zombies start at 
-		maxSpeed = (int)Math.ceil((Math.random()*2));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
+		maxSpeed = (int)Math.ceil((Math.random()*4));	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		//healthDepletionRate = 10; // Rate at which players health depletes TODO make selectable for difficulty
 		damageMultiplier = -2;
@@ -32,7 +32,7 @@ public class Zombie implements Person {
 	private int[] zombieDieX = {128*28,128*29,128*30,128*31,128*32,128*33,128*34,128*35,128*36};
 	private int[] zombieAttackX = {128*12,128*13,128*14,128*15,128*16,128*17,128*18,128*19,128*20};
 	private int[] faceDirectionXY ={0,0};
-	
+	private boolean attacking = false;	// set when zombie is attacking to pause move thread
 	private int walkCount = 0;
 	public Thread ZombieChaseThread;
 	private Thread ZombieDieThread = new Thread(new DieRunnable());
@@ -91,9 +91,10 @@ public class Zombie implements Person {
 	@Override
 	public void attack() {
 		// TODO Auto-generated method stub
-		Player.setHealthStat(damageMultiplier);
+		attacking = true;
 		Thread attack = new Thread(new attackRunnable());
 		attack.start();
+		Player.setHealthStat(damageMultiplier);
 		if(Player.getHealthStat() <= 0){
 			Player.dieStat();
 		}
@@ -254,85 +255,27 @@ public class Zombie implements Person {
 		}
 		public void run(){
 			for(;;){
-				chase();
-				int dirX;
-				int dirY;
-				try{
-					dirX=positionX-Player.getPositionXStat()/Math.abs(positionX-Player.getPositionXStat());
-				}
-				catch(ArithmeticException e){
-					dirX= 0;
-				}
 				
-				try{
-					dirY=positionX-Player.getPositionXStat()/Math.abs(positionX-Player.getPositionXStat());
-				}
-				catch(ArithmeticException e){
-					dirY= 0;
-				}
-				
-				switch(dirX){
-				case 0:
-						
-						switch(dirY){
-						case 0:
+				if(!isAttacking()){
+				boolean attackingSet = false;
+				int zombieBodyXCenter = positionX+57;
+				int zombieBodyYCenter = positionY+28;
+				if(Math.abs(Player.getPositionXStat()-(zombieBodyXCenter)) <= 30){
+					if(zombieBodyYCenter < Player.getPositionYStat()){
+						if(Math.abs(Player.getPositionYStat()-zombieBodyYCenter) <=58){
 							attack();
-							//break;
-						
-						case 1:
-								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+50){
-									attack();
-								}
-								//break;
-							case -1:
-								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+100){
-									attack();
-								}
-								//break;
-						}
-					
-				case 1:
-					if(positionX-Player.getPositionXStat()<= Player.getPlayerWidth()/2+50){
-						
-						switch(dirY){
-						case 0:
-							attack();
-							//break;
-						
-						case 1:
-								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+50){
-									attack();
-								}
-								//break;
-							case -1:
-								if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+100){
-									attack();
-								}
-								//break;
-						}
+							attackingSet = true;	
 					}
-						//break;
-					case -1:
-						if(positionX-Player.getPositionXStat()>= Player.getPlayerWidth()/2+75){
-							
-							switch(dirY){
-							case 0:
-								attack();
-								//break;
-							
-							case 1:
-									if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+50){
-										attack();
-									}
-									//break;
-								case -1:
-									if(Math.abs(positionY-Player.getPositionYStat()) <=Player.getPlayerHeight()/2+100){
-										attack();
-									}
-									//break;
-							}
-							}
-					//break;
+					else{
+					if(Math.abs(Player.getPositionYStat()-zombieBodyYCenter) <=40){
+						attack();
+						attackingSet = true;
+					}
+					}
+				}
+				}
+				if(!isAttacking()){
+					chase();
 				}
 				
 				try {
@@ -341,6 +284,16 @@ public class Zombie implements Person {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
 					return;
+				}
+				}
+				else{
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return;
+					}
 				}
 			}
 		}
@@ -383,6 +336,7 @@ public class Zombie implements Person {
 				e.printStackTrace();
 			}
 			}
+			attacking = false;
 		}
 	}
 	
@@ -403,5 +357,8 @@ public class Zombie implements Person {
 	}
 	public boolean isDead(){
 		return Dead;
+	}
+	public boolean isAttacking(){
+		return attacking;
 	}
 }

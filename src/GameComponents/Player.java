@@ -74,7 +74,9 @@ public class Player implements Person {
 	}
 	public static void setHealthStat(int increment) {
 		// TODO Auto-generated method stub
+		if(health >0){
 		health += increment;
+		}
 	}
 
 	@Override
