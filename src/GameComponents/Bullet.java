@@ -60,8 +60,8 @@ public class Bullet {
 				isAlive = false;
 			}
 				for(int i=0; i< ZombiePopulation.getZombiePopulation(); i++){
-					if(getBulletX()>=(ZombiePopulation.getZombie(i).getPositionX()) && getBulletX()<=(ZombiePopulation.getZombie(i).getPositionX()+Zombie.getSpriteDim())){
-						if(getBulletY()>=(ZombiePopulation.getZombie(i).getPositionY()) && getBulletY()<=(ZombiePopulation.getZombie(i).getPositionY()+Zombie.getSpriteDim())){
+					if(getBulletX()>=(ZombiePopulation.getZombie(i).getPositionX()+50-10) && getBulletX()<=(ZombiePopulation.getZombie(i).getPositionX()+75+10)){
+						if(getBulletY()>=(ZombiePopulation.getZombie(i).getPositionY()+45-10) && getBulletY()<=(ZombiePopulation.getZombie(i).getPositionY()+100+10)){
 							destroy();
 						ZombiePopulation.getZombie(i).setHealth(Player.getDamage());
 						isAlive = false;
@@ -73,7 +73,7 @@ public class Bullet {
 				}
 				else{
 					destroy();
-					break;
+					return;
 				}
 				
 				try {

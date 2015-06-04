@@ -151,5 +151,11 @@ public class Player implements Person {
 	public static int getDamage(){
 		return damageMultiplier;
 	}
+	public static void addKill(){
+		zombiesKilled++;
+	}
+	public static int getKillCount(){
+		return zombiesKilled;
+	}
 	
 }

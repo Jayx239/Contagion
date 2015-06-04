@@ -45,8 +45,8 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 	public class showStringThread implements Runnable{
 
 		public void run(){
-			while(!Thread.interrupted()){
-
+			//while(!Thread.interrupted()){
+			for(;;){
 				repaint();
 			System.out.println(" aa");
 			

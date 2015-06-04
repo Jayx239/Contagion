@@ -60,7 +60,7 @@ public class ZombiePopulation {
 				while(Zombies.size() < ZombieLimit){
 					addZombie();
 					try {
-						Thread.sleep((5000));
+						Thread.sleep((2000));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

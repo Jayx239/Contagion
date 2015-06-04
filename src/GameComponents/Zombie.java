@@ -244,12 +244,6 @@ public class Zombie implements Person {
 			
 		}
 		public void run(){
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			for(;;){
 				chase();
 				if((Math.abs(positionX-Player.getPositionXStat()) <= ((Player.getPlayerWidth()+zombieSpriteHeight)/2) || Math.abs(positionX+Player.getPositionXStat()) <= ((Player.getPlayerWidth()+zombieSpriteHeight)/2))  && (Math.abs(positionY-Player.getPositionYStat()) <= ((Player.getPlayerWidth()+zombieSpriteWidth)/2) || Math.abs(positionY+Player.getPositionYStat()) <= ((Player.getPlayerWidth()+zombieSpriteWidth)/2))){
@@ -271,6 +265,7 @@ public class Zombie implements Person {
 			
 		}
 		public void run(){
+			Player.addKill();
 			for(int i = 0; i<zombieDieX.length;i++){
 				spriteCoord[0] = zombieDieX[i]; 
 			try {
@@ -278,6 +273,9 @@ public class Zombie implements Person {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
+
+				setPositionY(-100);
+				setPositionX(-100);
 				return;
 			}
 			}

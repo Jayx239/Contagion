@@ -392,12 +392,21 @@ public class GameFrame extends JFrame {
 					
 				}
 				Graphics2D g2 = (Graphics2D) g;
+				g2.setColor(Color.BLACK);
+				g2.drawString("Health",50,30);
+				g2.drawString("Kills", 50, 60);
+				g2.drawString(Integer.toString(player.getKillCount()),100,60);
+				g2.drawRect(99, 11, 101, 22);
+				g2.setColor(Color.GREEN);
+				
+				g2.fillRect(100, 12, Player.getHealthStat(), 20);
+				
 				// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
-				g2.setColor(Color.YELLOW);
 				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
 				for(int i=0; i< zombies.getZombiePopulation();i++){
 				g2.drawImage(zombies.getZombie(i).getSprite(), zombies.getZombie(i).getPositionX(), zombies.getZombie(i).getPositionY(), zombies.getZombie(i).getPositionX()+128, zombies.getZombie(i).getPositionY()+128, zombies.getZombie(i).getSpriteCoord()[0], zombies.getZombie(i).getSpriteCoord()[1], zombies.getZombie(i).getSpriteCoord()[0]+128, zombies.getZombie(i).getSpriteCoord()[1]+128, null);
 				}
+				g2.setColor(Color.YELLOW);
 				for(int i=0; i< bullets.getNumBullets(); i++ ){
 					g2.fillOval(bullets.getBullet(i).getBulletX(), bullets.getBullet(i).getBulletY(), 10, 10);
 				}
