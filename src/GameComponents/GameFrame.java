@@ -428,7 +428,7 @@ public class GameFrame extends JFrame {
 				
 				// Draw Player Sprite TODO get sprite coordinates, import as png for transparency (player sprite issue)
 				if(player.getHealth() != 0){
-				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+28, player.getPositionY()+36, 166, 230, 194, 275, null);
+				g2.drawImage(player.getSprite(), player.getPositionX(), player.getPositionY(), player.getPositionX()+player.getSpriteWH()[0], player.getPositionY()+player.getSpriteWH()[1], player.getSpritePosition()[0], player.getSpritePosition()[1], player.getSpritePosition()[0]+player.getSpriteWH()[0], player.getSpritePosition()[1]+player.getSpriteWH()[1], null);
 				}
 				// Draw zombies
 				for(int i=0; i< zombies.getZombiePopulation();i++){	

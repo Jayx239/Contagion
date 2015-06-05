@@ -33,7 +33,7 @@ public class Player implements Person {
 	private Dimension ScreenSize;	// screen size for positioning
 	private static int positionX;	// sprite positioning
 	private static int positionY;	// sprite positioning
-	private static int spriteWidth = 36;	// sprited width for clipping
+	private static int spriteWidth = 44;	// sprited width for clipping
 	private static int spriteHeight = 28;	// sprite height for clipping
 	private int maxSpeed;	// player max speed
 	private static int health;	// player health
@@ -43,7 +43,13 @@ public class Player implements Person {
 	public static boolean pauseGame = false;	// pause game boolean, not yet implemented
 	private static int zombiesKilled = 0;	// zombie kill count
 	private static int[] moveCoordinates= new int[4];	// [xup,yup,xdown,ydown]
-	
+	private int[] faceDirectionXY ={0,0};	// used to set facing direction of player
+	private int[] spriteWH = {28,46};
+	private int[] spritePosition = {166,230};
+	private int[]spritePositionDown = {165,232};
+	private int[] spritePositionUp = {580,228};
+	private int[] spritePositionLeft={365,212};
+	private int[] spritePositionRight = {16,266};
 	/*
 	 * sprite dimensions
 	 * 36x28
@@ -142,6 +148,74 @@ public class Player implements Person {
 		}
 		else{
 			dy = (moveCoordinates[3] - moveCoordinates[1]) * maxSpeed;
+			
+		}
+		faceDirectionXY[0] = dx/maxSpeed;
+		faceDirectionXY[1] = dy/maxSpeed;
+		
+		switch(faceDirectionXY[0]){
+		case 0:
+				switch(faceDirectionXY[1]){
+				case 0:
+					break;
+					
+				case 1:
+					spriteWH[0] =28;
+					spriteWH[1] = 44;
+					spritePosition = spritePositionDown;
+				break;
+				
+				case -1:
+					spriteWH[0] =28;
+					spriteWH[1] = 44;
+					spritePosition = spritePositionUp;
+					break;
+				}
+				
+			break;
+		case 1:
+			switch(faceDirectionXY[1]){
+			case 0:
+				spriteWH[0] =44;
+				spriteWH[1] =28;
+				spritePosition = spritePositionRight;
+				break;
+				
+			case 1:
+				spriteWH[0] =28;
+				spriteWH[1] = 44;
+				spritePosition = spritePositionUp;
+			break;
+			
+			case -1:
+				spriteWH[0] =28;
+				spriteWH[1] = 44;
+				spritePosition = spritePositionDown;
+				break;
+			
+			}
+			break;
+		case -1:
+			switch(faceDirectionXY[1]){
+			case 0:
+				spriteWH[0] =44;
+				spriteWH[1] =28;
+				spritePosition = spritePositionLeft;
+				break;
+				
+			case 1:
+				spriteWH[0] =28;
+				spriteWH[1] = 44;
+				spritePosition = spritePositionUp;
+			break;
+			
+			case -1:
+				spriteWH[0] =28;
+				spriteWH[1] = 44;
+				spritePosition = spritePositionDown;
+				break;
+			}
+			break;
 		}
 		// increment positions
 		positionX += dx;
@@ -193,6 +267,12 @@ public class Player implements Person {
 	// method to get kill count for scoreboard
 	public static int getKillCount(){
 		return zombiesKilled;
+	}
+	public int[] getSpriteWH(){
+		return spriteWH;
+	}
+	public int[] getSpritePosition(){
+		return spritePosition;
 	}
 	
 }
