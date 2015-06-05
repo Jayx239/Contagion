@@ -39,6 +39,7 @@ Splash screen sometimes doesn't display ""press enter" to play
 On initial splash screen if you press enter too quickly it may crash, (This may have been fixed, testing needed)
 Initialization of game frame may take a few seconds, from there on it runs smoothly
 Bullets sometimes get stuck
+Keys sometimes get stuck, just press key in direction that is stuck and it will resolve the issue
 Zombies and player can go over health hud, not changing because I like it that way
 
 Im sure there are other bugs that I am either not thinking of or I have not seen yet. Feedback is always
