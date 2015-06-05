@@ -414,7 +414,7 @@ public class GameFrame extends JFrame {
 					
 				}
 				Graphics2D g2 = (Graphics2D) g;	// convert to 2d graphics object
-				g2.drawImage(Background, 0, 0, ScreenSize.width, ScreenSize.height, 0, 0, 429, 429, null);	// Draw background
+				g2.drawImage(Background, 0, 0, ScreenSize.width, ScreenSize.height, 0, 0, 1024, 1024, null);	// Draw background
 				g2.setColor(Color.WHITE);	// set color for health/kill hud
 				g2.fillRect(5, 5, 250, 75);	// draw hud
 				g2.setColor(Color.BLACK);	// set color for text in hud
