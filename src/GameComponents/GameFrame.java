@@ -162,10 +162,10 @@ public class GameFrame extends JFrame {
 					pauseGame
 			);
 			// R key for restart TODO: implement
-			/*this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_R,0,true),"restart");
+			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_R,0,true),"restart");
 			this.getActionMap().put("restart",
 					Restart
-			);*/
+			);
 			// move left mapped to A key
 			// key pressed (start)
 			this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A,0,false),"moveleft");
@@ -278,16 +278,17 @@ public class GameFrame extends JFrame {
 				}
 			};
 			
-			//Restart Game (R key)
-			/*Action Restart = new AbstractAction(){
+			//Respawn player (R key)
+			Action Restart = new AbstractAction(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					visListen.interrupt();
-					visListen.start();
+					if(player.getHealth() == 0){
+						player.respawn();
+					}
 					//System.out.println(player.getPositionX()+ " " + player.getPositionY());
 
 				}
-			};*/
+			};
 
 
 			Action moveLeft = new AbstractAction(){
@@ -463,6 +464,7 @@ public class GameFrame extends JFrame {
 					g2.setColor(Color.RED);
 					g2.setFont(new Font("Impact",Font.ITALIC,30));
 					g2.drawString("GAME OVER", (int)(ScreenSize.getWidth()/2-50), (int)(ScreenSize.getHeight()/2-50));
+					g2.drawString("Press R to respawn",(int)(ScreenSize.getWidth()/2-100),(int)(ScreenSize.getHeight()/2+50));
 				}
 				moveLock.unlock();
 			}

@@ -14,7 +14,7 @@ import javax.swing.*;
 
 public class Player implements Person {
 	public Player(){
-		Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// Instantiate instance variables
 		positionX = (int) (ScreenSize.getWidth()/2);	// Character at center of screen X
 		positionY = (int) (ScreenSize.getHeight()/2);	// Character at center of screen Y
@@ -29,6 +29,7 @@ public class Player implements Person {
 		}
 	}
 	// Instance variables
+	private Dimension ScreenSize;
 	private static int positionX;
 	private static int positionY;
 	private static int spriteWidth = 36;
@@ -114,6 +115,11 @@ public class Player implements Person {
 		positionX += dx;
 		positionY += dy;
 		
+	}
+	public void respawn(){
+		health = 100;
+		positionX = (int) (ScreenSize.getWidth()/2);	// Character at center of screen X
+		positionY = (int) (ScreenSize.getHeight()/2);	// Character at center of screen Y
 	}
 	/*public void setPosition(int direction) {
 		// TODO Auto-generated method stub
