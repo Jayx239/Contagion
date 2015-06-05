@@ -2,6 +2,7 @@ package GameComponents;
 
 public class Bullet {
 	public Bullet(int[] dir){
+		// set instance variables
 		bulletX = Player.getPositionXStat();
 		bulletY = Player.getPositionYStat();
 		bulletDirection = dir;
@@ -11,6 +12,7 @@ public class Bullet {
 		moveBulletThread = new Thread(new moveBullet());
 		moveBulletThread.start();
 	}
+	// instance variables
 	private Thread moveBulletThread;
 	private static int bulletSpeed = 5;
 	private int bulletX;
@@ -20,32 +22,39 @@ public class Bullet {
 	private boolean isAlive = true;
 	private int dx;
 	private int dy;
+	// method to set bullet position
 	public void setPosition(){
 
 		bulletX += dx;
 		bulletY += dy;
 		
 	}
+	// method to get bullet x coords
 	public int getBulletX(){
 		return bulletX;
 	}
+	// method to get bullet y coords
 	public int getBulletY(){
 		return bulletY;
 	}
+	// method to get bullet speed
 	public static int getBulletSpeed(){
 		return bulletSpeed;
 	}
+	// method to move bullet off screen to hide
 	public void hideBullet(){
 		bulletX = -20;
 	}
+	// method to destroy bullet on hit or off screen
 	public void destroy(){
 		hideBullet();
 		destroyBullet = true;
 	}
+	// method to check if bullet is still active, used by bullet tracking class
 	public boolean isDestroyed(){
 		return destroyBullet;
 	}
-	
+	// move bullet runnable for bullet animation
 	public class moveBullet implements Runnable{
 		public moveBullet(){
 			
@@ -54,11 +63,13 @@ public class Bullet {
 		public void run() {
 			
 			for(;;){
+				// detect if on screen
 			if(getBulletX() <= GameFrame.getWindowWidth() && getBulletX() >= 0 &&getBulletY() <= GameFrame.getWindowHeight() && getBulletY() >=0){
 			}
 			else{
 				isAlive = false;
 			}
+				// hit detection
 				for(int i=0; i< ZombiePopulation.getZombiePopulation(); i++){
 					if(getBulletX()>=(ZombiePopulation.getZombie(i).getPositionX()+50-10) && getBulletX()<=(ZombiePopulation.getZombie(i).getPositionX()+75+10)){
 						if(getBulletY()>=(ZombiePopulation.getZombie(i).getPositionY()+45-10) && getBulletY()<=(ZombiePopulation.getZombie(i).getPositionY()+100+10)){

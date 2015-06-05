@@ -21,6 +21,7 @@ public class Player implements Person {
 		maxSpeed = 6;	// Max Speed of character, TODO make this selectable for varying degrees of difficulty
 		health = 100;	// Health set to 100 initially
 		damageMultiplier = -25; // Rate at which players damages enemys TODO make selectable for difficulty
+		// import sprite image
 		try {
 			playerSprite = ImageIO.read(new File("assets/SoldierSprite.png"));
 		} catch (IOException e) {
@@ -29,17 +30,18 @@ public class Player implements Person {
 		}
 	}
 	// Instance variables
-	private Dimension ScreenSize;
-	private static int positionX;
-	private static int positionY;
-	private static int spriteWidth = 36;
-	private static int spriteHeight = 28;
-	private int maxSpeed;
-	private static int health;
-	private int[] spriteClipCoordinates = new int[4];
-	private static int damageMultiplier;
-	public static boolean pauseGame = false;
-	private static int zombiesKilled = 0;
+	private Dimension ScreenSize;	// screen size for positioning
+	private static int positionX;	// sprite positioning
+	private static int positionY;	// sprite positioning
+	private static int spriteWidth = 36;	// sprited width for clipping
+	private static int spriteHeight = 28;	// sprite height for clipping
+	private int maxSpeed;	// player max speed
+	private static int health;	// player health
+	private int[] spriteClipCoordinates = new int[4];	/* used to clip part of buffered image for painting, (used to animate sprites, but the quality of
+	player sprites was bad so this was just used to get one image*/
+	private static int damageMultiplier;	// damage multiplier for zombie damage
+	public static boolean pauseGame = false;	// pause game boolean, not yet implemented
+	private static int zombiesKilled = 0;	// zombie kill count
 	private static int[] moveCoordinates= new int[4];	// [xup,yup,xdown,ydown]
 	
 	/*
@@ -47,6 +49,7 @@ public class Player implements Person {
 	 * 36x28
 	 * x166 y230
 	 */
+	// Player buffered image sprite
 	private BufferedImage playerSprite;
 	// Person Interface Methods
 	@Override
@@ -56,12 +59,14 @@ public class Player implements Person {
 	}
 
 	@Override
+	// unused
 	public void attack() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	// methods to print to console if player is dead
 	public void die() {
 		// TODO Auto-generated method stub
 		
@@ -72,6 +77,7 @@ public class Player implements Person {
 	}
 
 	@Override
+	// methods to set health
 	public void setHealth(int increment) {
 		// TODO Auto-generated method stub
 		health+= increment;
@@ -84,6 +90,7 @@ public class Player implements Person {
 	}
 
 	@Override
+	// get health methods
 	public int getHealth() {
 		// TODO Auto-generated method stub
 		return health;
@@ -94,6 +101,7 @@ public class Player implements Person {
 	}
 
 	@Override
+	// methods for get getting player position (static and nonstatic)
 	public int getPositionX() {
 		// TODO Auto-generated method stub
 		return positionX;
@@ -111,46 +119,78 @@ public class Player implements Person {
 	}
 
 	@Override
+	// method for moving player
 	public void setPosition(){
-		int dx = (moveCoordinates[0] - moveCoordinates[2]) * maxSpeed;
-		int dy = (moveCoordinates[3] - moveCoordinates[1]) * maxSpeed;
+		int dx = 0;
+		int dy = 0;
+		// boundary detection X
+		if((positionX-ScreenSize.width >= -spriteWidth-maxSpeed && moveCoordinates[0] ==1)){
+			dx = -moveCoordinates[2] * maxSpeed;
+		}
+		else if((positionX <= maxSpeed && moveCoordinates[2] ==1)){
+			dx = moveCoordinates[0] * maxSpeed;
+		}
+		else{
+			dx = (moveCoordinates[0] - moveCoordinates[2]) * maxSpeed;
+		}
+		// boundary detection y
+		if((positionY-ScreenSize.height >= -spriteHeight-maxSpeed-50 && moveCoordinates[3] ==1)){
+			dy = -moveCoordinates[1] * maxSpeed;
+		}
+		else if((positionY <= maxSpeed && moveCoordinates[1] ==1)){
+			dy = moveCoordinates[3] * maxSpeed;
+		}
+		else{
+			dy = (moveCoordinates[3] - moveCoordinates[1]) * maxSpeed;
+		}
+		// increment positions
 		positionX += dx;
 		positionY += dy;
 		
 	}
+	// method for respawn
 	public void respawn(){
 		health = 100;
+		
 		positionX = (int) (ScreenSize.getWidth()/2);	// Character at center of screen X
 		positionY = (int) (ScreenSize.getHeight()/2);	// Character at center of screen Y
 	}
 	
 
 	@Override
+	// method to get sprite for panel painting
 	public BufferedImage getSprite() {
 		// TODO Auto-generated method stub
 		return playerSprite;
 	}
 
 	@Override
+	// method for getting sprite clip coordinates for animation (need better sprite sheet to make this worth it)
 	public int[] getAffineSprite() {
 		// TODO Auto-generated method stub
 		return spriteClipCoordinates;
 	}
+	// method to get player width
 	public static int getPlayerWidth(){
 		return spriteWidth;
 	}
+	// method to get player height
 	public static int getPlayerHeight(){
 		return spriteHeight;
 	}
+	// method to set move coordinates (used by key presses to set move coordinates array)
 	public void setMoveCoordinate(int index,int val){
 		moveCoordinates[index] = val;
 	}
+	// method to get player damage multiplier
 	public static int getDamage(){
 		return damageMultiplier;
 	}
+	// method to increment kill count
 	public static void addKill(){
 		zombiesKilled++;
 	}
+	// method to get kill count for scoreboard
 	public static int getKillCount(){
 		return zombiesKilled;
 	}

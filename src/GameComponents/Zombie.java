@@ -25,30 +25,32 @@ public class Zombie implements Person {
 		spriteCoord[1] = 0;
 	}
 	// Instance variables
-	// Sprite handling
-	private int[] spriteCoord = new int[2];
-	private int[] spriteWalkX = {128*5,128*6,128*7,128*8,128*9,128*10,128*11};
-	private int[] spriteWalkY = {0,128*1,128*2,128*3,128*4,128*5,128*6,128*7};
-	private int[] zombieDieX = {128*28,128*29,128*30,128*31,128*32,128*33,128*34,128*35,128*36};
-	private int[] zombieAttackX = {128*12,128*13,128*14,128*15,128*16,128*17,128*18,128*19,128*20};
-	private int[] faceDirectionXY ={0,0};
+	// Sprite handling (Sprites animated by cycling through sprite sheets in parts using a thread with a delay)
+	private int[] spriteCoord = new int[2];	// x,y coordinates of sprite on sprite sheet
+	private int[] spriteWalkX = {128*5,128*6,128*7,128*8,128*9,128*10,128*11};	// coordinates for walking animation
+	private int[] spriteWalkY = {0,128*1,128*2,128*3,128*4,128*5,128*6,128*7};	// y coodinates for zombie walk direction
+	private int[] zombieDieX = {128*28,128*29,128*30,128*31,128*32,128*33,128*34,128*35,128*36};	// zombie x die animation coordinates
+	private int[] zombieAttackX = {128*12,128*13,128*14,128*15,128*16,128*17,128*18,128*19,128*20};	// zombie x attack animation coordinates
+	
+	private int[] faceDirectionXY ={0,0};	// used to set facing direction of zombie
 	private boolean attacking = false;	// set when zombie is attacking to pause move thread
 	private int walkCount = 0;
-	public Thread ZombieChaseThread;
-	private Thread ZombieDieThread = new Thread(new DieRunnable());
-	private Dimension ScreenSize;
+	public Thread ZombieChaseThread;	// thread for zombie chase functionallity
+	private Thread ZombieDieThread = new Thread(new DieRunnable());	// thread for zombie die animation
+	private Dimension ScreenSize;	// screen dimensions
 	// Position = top left
 	private int positionX;
 	private int positionY;
 	// Zombie cent coordinates x+64xy+64
-	private static int zombieSpriteWidth = 64;
-	private static int zombieSpriteHeight = 64;
-	private int maxSpeed;
-	private int health;
+	// actually center zombie position relative to top right
+	private static int zombieSpriteWidth = 64;	// width
+	private static int zombieSpriteHeight = 64;	// height
+	private int maxSpeed;	// maxspeed of zombie
+	private int health;	// health of zombie
 	//private int healthDepletionRate; // not used player sets damage using player multiplier
-	public static boolean pauseGame;
-	private int damageMultiplier;
-	public boolean Dead = false;
+	public static boolean pauseGame;	// not implemented
+	private int damageMultiplier;	// damage inflicted on player with each hit
+	public boolean Dead = false;	// used as flag to remove zombie from zombie population thread
 	/*
 	 * Zombie Sprite dimensions http://opengameart.org/content/zombie-sprites
 	 *128x128 tiles.  8 direction, 36 frames per direction.
@@ -162,7 +164,7 @@ public class Zombie implements Person {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	// method for Zombie sprite animation for movement
 	private void chase(){
 		//TODO make 128/2 variable for scaling(image size/2)
 		// Zombie below player
@@ -260,6 +262,7 @@ public class Zombie implements Person {
 				boolean attackingSet = false;
 				int zombieBodyXCenter = positionX+57;
 				int zombieBodyYCenter = positionY+28;
+				// Proximity detection for attacking
 				if(Math.abs(Player.getPositionXStat()-(zombieBodyXCenter)) <= 30){
 					if(zombieBodyYCenter < Player.getPositionYStat()){
 						if(Math.abs(Player.getPositionYStat()-zombieBodyYCenter) <=58){
@@ -274,10 +277,11 @@ public class Zombie implements Person {
 					}
 				}
 				}
+				// if not attacking chase
 				if(!isAttacking()){
 					chase();
 				}
-				
+				// sleep based on zombie speed
 				try {
 					Thread.sleep((int)(100/maxSpeed));
 				} catch (InterruptedException e) {
@@ -287,6 +291,7 @@ public class Zombie implements Person {
 				}
 				}
 				else{
+					//sleep longer when attacking
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -298,36 +303,37 @@ public class Zombie implements Person {
 			}
 		}
 	}
-	
+	// runnable for zombie death
 	public class DieRunnable implements Runnable{
 		DieRunnable(){
 			
 		}
 		public void run(){
-			Player.addKill();
+			Player.addKill();	// increment kill count
 			for(int i = 0; i<zombieDieX.length;i++){
 				spriteCoord[0] = zombieDieX[i]; 
 			try {
 				Thread.sleep((int)(100/maxSpeed));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
-
+				// move off screen (fixes invisible zombie issue)
 				setAbsolutePositionY(-100);
 				setAbsolutePositionX(-100);
 				return;
 			}
 			}
+			// move off screen (fixes invisible zombie issue)
 			setAbsolutePositionY(-100);
 			setAbsolutePositionX(-100);
 		}
 	}
-	
+	// runnable for zombie attacking
 	public class attackRunnable implements Runnable{
 		attackRunnable(){
 			
 		}
 		public void run(){
+			// animate
 			for(int i = 0; i<zombieAttackX.length;i++){
 				spriteCoord[0] = zombieAttackX[i]; 
 			try {
@@ -339,7 +345,7 @@ public class Zombie implements Person {
 			attacking = false;
 		}
 	}
-	
+	// method to get zombie chase thread
 	public Thread getThread(){
 		return ZombieChaseThread;
 	}
@@ -349,15 +355,19 @@ public class Zombie implements Person {
 		// TODO Auto-generated method stub
 		
 	}
+	// method for getting zombie sprites dimensions
 	public static int getSpriteDim(){
 		return zombieSpriteWidth;
 	}
+	// method to get clipping coordinate for animation
 	public int[] getSpriteCoord(){
 		return spriteCoord;
 	}
+	// flag to start death animation
 	public boolean isDead(){
 		return Dead;
 	}
+	// method to indicate if zombie is attacking (pauses move thread)
 	public boolean isAttacking(){
 		return attacking;
 	}

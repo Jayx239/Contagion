@@ -22,28 +22,33 @@ public class ZombiePopulation {
 			e.printStackTrace();
 		}
 	}
+	// instance variables
 	private BufferedImage setZombieSprite;
 	private int ZombieLimit;
-	private int ZombieSpawnRate;
-	private static Vector<Zombie> Zombies = new Vector<Zombie>();
-	public Thread genZombieThread;
+	private int ZombieSpawnRate;	// zombie spawn rate
+	private static Vector<Zombie> Zombies = new Vector<Zombie>();	// vector to keep track of zombies
+	public Thread genZombieThread; // generate zombie thread object
+	//method to add zombie to zombies vector
 	private void addZombie(){
 		Zombie zombie = new Zombie(setZombieSprite);
 		Zombies.addElement(zombie);
 	}
-	
+	// method for removing dead zombies
 	public void removeZombie(int zombieIndex){
 		Zombies.get(zombieIndex).die();
 		
 		Zombies.remove(zombieIndex);
 		
 	}
+	// method to get specific zombie
 	public static Zombie getZombie(int zombieIndex){
 		return Zombies.get(zombieIndex);
 	}
+	// method to get zombie population size
 	public static int getZombiePopulation(){
 		return Zombies.size();
 	}
+	// thread for adding zombies
 	public class generateZombie implements Runnable{
 		public generateZombie(){
 			
@@ -56,11 +61,12 @@ public class ZombiePopulation {
 				e.printStackTrace();
 			}
 			for(;;){
-				//System.out.println("Generating Zombies");
+				// while zombies is less then maximum allowed number of zombies add zombie
 				while(Zombies.size() < ZombieLimit){
 					addZombie();
+					// time between adding zombie
 					try {
-						Thread.sleep((2000));
+						Thread.sleep((ZombieSpawnRate));
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

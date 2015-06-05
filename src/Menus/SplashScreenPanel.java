@@ -48,7 +48,7 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 			//while(!Thread.interrupted()){
 			for(;;){
 				repaint();
-			System.out.println(" aa");
+			System.out.println("Splash Screen running");
 			
 			try {
 				Thread.sleep(5000);

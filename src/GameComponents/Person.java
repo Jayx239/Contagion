@@ -2,7 +2,7 @@ package GameComponents;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-
+//Basic interface with methods all player and zombies contain
 public interface Person {
 	void move();
 	void attack();

@@ -9,25 +9,26 @@ import GameComponents.GameFrame;
 //http://zetcode.com/tutorials/javagamestutorial/movingsprites/
 public class SplashScreen extends JFrame{
 	SplashScreen(){
-		Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setBounds(ScreenSize.width/2-ScreenSize.width/8,ScreenSize.height/2-ScreenSize.height/8 , ScreenSize.width/4, ScreenSize.height/4);
+		// Instantiate jframe and instance variables
+		Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();	// used to set position
+		this.setBounds(ScreenSize.width/2-ScreenSize.width/8,ScreenSize.height/2-ScreenSize.height/8 ,  480, 270);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		splashPanel = new SplashScreenPanel();
-		this.add(splashPanel);
-		
+		splashPanel = new SplashScreenPanel();	// create new splash panel for text display
+		this.add(splashPanel);	// add to frame
+		// visibility thread instantiation
 		visibilityRun = new Visibility();
 		visibilityThread = new Thread(visibilityRun);
 
-		show = true;
-		visibilityThread.start();
-		this.setVisible(true);
+		show = true;	// set show to true for visibility thread
+		visibilityThread.start();	// listen for visibility change
+		this.setVisible(true);	// show this
 		//splashPanel.requestFocus();
-		validate();
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		validate();	// refresh
 	}
 	private static Thread visibilityThread;
-	private Visibility visibilityRun;
-	private static boolean show;
+	private Visibility visibilityRun;	// thread variable
+	private static boolean show;	// show variable for splash screen showing
+	// method to switch showing of splashscreem
 	public static void setShow(){
 		show = !show;
 	}
@@ -35,6 +36,7 @@ public class SplashScreen extends JFrame{
 		visibilityThread.start();
 		return 1;
 	}
+	// thread to listen for input that makes gameframe visible
 	public class Visibility implements Runnable{
 
 		@Override
@@ -47,13 +49,13 @@ public class SplashScreen extends JFrame{
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					setVisible(false);
-					GameFrame.setVis(true);
+					setVisible(false);	// make this invisible
+					GameFrame.setVis(true);	// show gameframe
 					return;
 				}
 			}
-			setVisible(false);
-			GameFrame.setVis(true);
+			setVisible(false);	// hide
+			GameFrame.setVis(true);	// set so game frame thread keeps running
 			
 		}
 		
@@ -63,8 +65,8 @@ public class SplashScreen extends JFrame{
 		this.setVisible(false);
 	}
 	public static void main(String[] args){
-		SplashScreen splashScreen = new SplashScreen();
-		GameFrame gameFrame = new GameFrame();
+		SplashScreen splashScreen = new SplashScreen();	// Start splash screen
+		GameFrame gameFrame = new GameFrame();	// run gameframe in background
 		//splashScreen.setVisible(true);
 	}
 }
