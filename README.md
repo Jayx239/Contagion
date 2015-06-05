@@ -2,9 +2,15 @@
 Created By Jason Gallagher
 Advanced Java Final Project ECEC-301
 A top down java based zombie shooter.
-To run clone and run splash screen.java
+Problem statement:
+Make a java base top down zombie shooter game in 6 days implementing programming concepts outlined
+in Drexel's ECEC-301 class.
 
-To run:
+To run (zipped):
+unzip files
+run splash screen.java
+
+To run (from github: https://github.com/Jayx239/Contagion):
 Clone
 Run SplashScreen.java
 press enter to begin game
@@ -38,6 +44,8 @@ Zombies and player can go over health hud, not changing because I like it that w
 Im sure there are other bugs that I am either not thinking of or I have not seen yet. Feedback is always
 appreciated.
 
+References:
 Zombie Sprites created by clint bellanger https://github.com/clintbellanger
 Sprites can be found at http://opengameart.org/content/zombie-sprites
 Background can be found at http://imgdirectory.org/Zm9yY2VTUg
+Soldier Sprites can be found at http://www.pixeljoint.com/pixelart/16951.htm
