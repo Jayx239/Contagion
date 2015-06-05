@@ -32,8 +32,10 @@ Known bugs:
 Splash screen sometimes doesn't display ""press enter" to play
 On initial splash screen if you press enter too quickly it may crash, (This may have been fixed, testing needed)
 Initialization of game frame may take a few seconds, from there on it runs smoothly
+Bullets sometimes get stuck
+Zombies and player can go over health hud, not changing because I like it that way
 
-Im sure there are other bugs that I am either not thinking of or i have not seen yet. Feedback is always
+Im sure there are other bugs that I am either not thinking of or I have not seen yet. Feedback is always
 appreciated.
 
 Zombie Sprites created by clint bellanger https://github.com/clintbellanger
