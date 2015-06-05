@@ -41,7 +41,9 @@ public class Player implements Person {
 	public static boolean pauseGame = false;
 	private static int zombiesKilled = 0;
 	private static int[] moveCoordinates= new int[4];	// [xup,yup,xdown,ydown]
+	
 	/*
+	 * sprite dimensions
 	 * 36x28
 	 * x166 y230
 	 */
@@ -121,20 +123,6 @@ public class Player implements Person {
 		positionX = (int) (ScreenSize.getWidth()/2);	// Character at center of screen X
 		positionY = (int) (ScreenSize.getHeight()/2);	// Character at center of screen Y
 	}
-	/*public void setPosition(int direction) {
-		// TODO Auto-generated method stub
-		//-2:left 2:right -1:down 1:up
-		switch(direction){
-		case -2: positionX -= maxSpeed;
-			break;
-		case -1: positionY += maxSpeed;
-				break;
-		case 1: positionY -= maxSpeed;
-				break;
-		case 2: positionX += maxSpeed;
-				break;
-		};
-	}*/
 	
 
 	@Override

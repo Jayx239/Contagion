@@ -58,7 +58,6 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 				return;
 				
 			}
-			showString = true;
 			}
 			
 			
@@ -76,18 +75,11 @@ public class SplashScreenPanel extends JPanel{ //implements KeyListener{
 		g2.drawString("Created by Jason Gallagher",110,75);
 		g2.setFont(new Font("Algerean",Font.PLAIN,10));
 		g2.drawString("Zombie Sprites by Clint Bellanger",280,220);
+		continueS = "Press Enter to Continue";
+		g2.setColor(Color.BLACK);
+		g2.setFont(new Font("Algerean",Font.PLAIN,20));
+		g2.drawString(continueS,135,175);
 		validate();
-		if(showString){
-			continueS = "Press Enter to Continue";
-			g2.setColor(Color.BLACK);
-			g2.setFont(new Font("Algerean",Font.PLAIN,20));
-			g2.drawString(continueS,135,175);
-			showString = false;
-			validate();
-		}
-		else{
-			showString = true;
-		}
 	}
 	
 }
