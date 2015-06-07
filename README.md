@@ -11,8 +11,9 @@ unzip files
 run splash screen.java
 
 To run (from github: https://github.com/Jayx239/Contagion):
-Clone
-Run SplashScreen.java
+Clone, Import into eclipse,
+Add javaSE-1.8 to classpath,
+Compilte and Run SplashScreen.java
 press enter to begin game
 
 Controls:
